@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+    <meta name="cesium-sandcastle-labels" content="Showcases">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="styles.3f07ce1a981a0b40fdd3.css">
+    <!-- <link rel="stylesheet" href="./Build/Cesium/Widgets/InfoBox/InfoBoxDescription.css"> -->
+    <!-- <link rel="stylesheet" href="graph.css"> -->
+    <!-- Include the CesiumJS JavaScript and CSS files -->
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.87/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.87/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <title>Chula GIS/3D</title>
+    <script type="text/javascript" src="./Apps/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="./Apps/jquery-ui.min.js"></script>
+    <script src="./CesiumHeatmap-master/CesiumHeatmap.js"></script>
+    <script src="./CesiumHeatmap-master/HeatmapImageryProvider.js"></script>
+    <script src="data.js"></script>
+    <script src="./ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <style>
+        @import url(../Apps/Sandcastle/templates/bucket.css);
+
+        .cesium-viewer-toolbar {
+            z-index: 1;
+        }
+
+        .cesium-infoBox {
+            z-index: 1;
+            color: #DC5F8D;
+            font-weight: bold;
+        }
+
+        .cesium-infoBox-title {
+            background: white;
+        }
+
+        .cesium-svgPath-svg {
+            z-index: 1;
+        }
+
+        .hint-box[_ngcontent-vby-c26] {
+            height: 15px;
+            width: 15px;
+            margin: 10px;
+            margin-top: 2px;
+        }
+
+        .detail-image[_ngcontent-qdc-c25] {
+            height: 25px;
+            margin-left: 7.5px;
+        }
+
+        h5 {
+            font-size: 16px;
+        }
+
+        hr {
+            height: 4px;
+            width: 30px;
+            border: none;
+            margin: 5px;
+        }
+
+        /* The switch - the box around the slider */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 30px;
+            height: 17px;
+            margin-left: -10px;
+        }
+
+        /* Hide default HTML checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .2s;
+            transition: .2s;
+            margin-left: -10px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 13px;
+            width: 13px;
+            left: 2px;
+            bottom: 2px;
+            background-color: #fff;
+            -webkit-transition: .2s;
+            transition: .2s;
+        }
+
+        input:checked+.slider {
+            background-color: lime;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px lime;
+        }
+
+        input:checked+.slider:before {
+            -webkit-transform: translateX(13px);
+            -ms-transform: translateX(13px);
+            transform: translateX(13px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 17px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        #barchart,
+        #piechart,
+        #piechart2,
+        #piechart3 {
+            display: none;
+            background: transparent;
+            margin-left: 50px;
+        }
+
+        .fa {
+            position: relative;
+            display: table-cell;
+            width: 60px;
+            height: 36px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 20px;
+        }
+
+        .main-menu:hover,
+        nav.main-menu.expanded {
+            width: 250px;
+            overflow: visible;
+        }
+
+        .dashboard:hover,
+        nav.dashboard.expanded {
+            width: 400px;
+            overflow: visible;
+        }
+
+        .main-menu {
+            background: transparent;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            height: 100%;
+            left: 0;
+            width: 60px;
+            overflow: hidden;
+            -webkit-transition: width .05s linear;
+            transition: width .05s linear;
+            z-index: 1000;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0));
+        }
+
+        .main-menu>ul,
+        .dashboard>ul {
+            margin: 7px 0;
+        }
+
+        .main-menu li {
+            position: relative;
+            display: block;
+            width: 250px;
+        }
+
+        .dashboard li {
+            position: relative;
+            display: block;
+            width: 400px;
+        }
+
+        .main-menu li>a,
+        .dashboard li>a {
+            position: relative;
+            display: table;
+            border-collapse: collapse;
+            border-spacing: 0;
+            background: transparent;
+            color: #fff;
+            font-family: arial;
+            font-size: 16px;
+            text-decoration: none;
+            -webkit-transition: all .1s linear;
+            transition: all .1s linear;
+        }
+
+        .main-menu .nav-text {
+            position: relative;
+            display: table-cell;
+            vertical-align: middle;
+            width: 190px;
+            font-family: 'CHULALONGKORN', sans-serif;
+            left: 8px;
+        }
+
+        .dashboard .nav-text {
+            position: relative;
+            display: table-cell;
+            vertical-align: middle;
+            width: 100%;
+            font-family: 'CHULALONGKORN', sans-serif;
+            top: 5px;
+            left: 120px;
+        }
+
+        a:hover,
+        a:focus {
+            text-decoration: none;
+        }
+
+        nav {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+        }
+
+        nav ul,
+        nav li {
+            outline: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main-menu li:hover>a,
+        .dashboard li:hover>a {
+            color: #fff;
+            background-color: #DE5B8D;
+        }
+
+        .dashboard {
+            background: transparent;
+            position: absolute;
+            top: 0px;
+            bottom: 0;
+            height: 100%;
+            right: 0;
+            width: 60px;
+            overflow: hidden;
+            -webkit-transition: width .05s linear;
+            transition: width .05s linear;
+            /* z-index: 1000; */
+            background-image: linear-gradient(to left, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0));
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cesiumContainer" class="fullSize"></div>
+    <div id="loadingOverlay">
+        <h1>Loading...</h1>
+    </div>
+    <nav class="main-menu">
+        <ul>
+            <li>
+                <a
+                    style="width: 100%; background: transparent; font-family: 'CHULALONGKORN' sans-serif; font-size: 16px;"></a>
+                <span class="nav-text">
+                    <a href="https://www.chula.ac.th/" target="_blank">
+                        <img title="" src="./Build/Cesium/Assets/Images/LOGO_chula_pmcu.svg"
+                            style="height: 75px; position: relative; left: 60px; margin-top: 5px; margin-bottom: 60px;">
+                    </a>
+                </span>
+                </a>
+            </li>
+            <li>
+                <a
+                    style="width: 100%; background: transparent; font-family: 'CHULALONGKORN' sans-serif; font-size: 16px;">
+                    <i class="fa">
+                        <img src="https://img.icons8.com/small/24/ffffff/building--v1.png" />
+                    </i>
+                    <span class="nav-text" style="color: #DE5B8D; font-size: 18px; font-weight: bold;">
+                        อาคารและสิ่งปลูกสร้าง
+                    </span>
+                    <label class="switch">
+                        <input type="checkbox" style="display: none;">
+                        <span class="slider round" style="display: none;"></span>
+                    </label>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <i class="fa">
+                        <img src="https://img.icons8.com/material-outlined/24/ffffff/building-with-top-view.png" />
+                    </i>
+                    <span class="nav-text">
+                        โมเดลอาคาร 3 มิติ
+                    </span>
+                    <label class="switch">
+                        <input type="checkbox" id="Buildings" onchange="Buildings()" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <i class="fa">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 226 226">
+                            <g fill="#ffffff">
+                                <path
+                                    d="M35.3125,14.125c-11.61826,0 -21.1875,9.56924 -21.1875,21.1875v14.125v141.25v7.0625h197.75v-7.0625v-7.0625v-102.40625c0,-5.77051 -4.82325,-10.59375 -10.59375,-10.59375h-45.90625v-21.1875v-14.125c0,-11.61826 -9.56925,-21.1875 -21.1875,-21.1875h-14.125h-70.625zM35.3125,28.25h14.125h70.625h14.125c3.97574,0 7.0625,3.08676 7.0625,7.0625v14.125v134.1875h-42.375v-28.25h-28.25v28.25h-42.375v-134.1875v-14.125c0,-3.97574 3.08676,-7.0625 7.0625,-7.0625zM42.375,42.375v14.125h14.125v-14.125zM70.625,42.375v14.125h28.25v-14.125zM113,42.375v14.125h14.125v-14.125zM42.375,70.625v14.125h14.125v-14.125zM70.625,70.625v14.125h28.25v-14.125zM113,70.625v14.125h14.125v-14.125zM155.375,84.75h42.375v98.875h-42.375zM42.375,98.875v14.125h14.125v-14.125zM70.625,98.875v14.125h28.25v-14.125zM113,98.875v14.125h14.125v-14.125zM169.5,98.875v14.125h14.125v-14.125zM42.375,127.125v14.125h14.125v-14.125zM70.625,127.125v14.125h28.25v-14.125zM113,127.125v14.125h14.125v-14.125zM169.5,127.125v14.125h14.125v-14.125zM42.375,155.375v14.125h14.125v-14.125zM113,155.375v14.125h14.125v-14.125zM169.5,155.375v14.125h14.125v-14.125z">
+                                </path>
+                            </g>
+                        </svg>
+                    </i>
+                    <span class="nav-text">
+                        ความสูงอาคาร
+                    </span>
+                    <label class="switch">
+                        <input type="checkbox" id="Height" onchange="Height()">
+                        <span class="slider round"></span>
+                    </label>
+                </a>
+                <div id="heightdetail" style="display:none">
+                    <div style="width: 100%;">
+                        <table style="margin-left: 60px;">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div _ngcontent-vby-c26="" class="hint-box" style="background-color: blue;">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        0 - 20 เมตร
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div _ngcontent-vby-c26="" class="hint-box" style="background-color: green;">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        21 - 40 เมตร
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div _ngcontent-vby-c26="" class="hint-box" style="background-color: yellow;">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        41 - 60 เมตร
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div _ngcontent-vby-c26="" class="hint-box" style="background-color: orange;">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        61 - 80 เมตร
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div _ngcontent-vby-c26="" class="hint-box" style="background-color: red;">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        มากกว่า 80 เมตร
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <a>
+                    <i class="fa">
+                        <img src="https://img.icons8.com/small/24/ffffff/manager.png" />
+                    </i>
+                    <span class="nav-text">
+                        หน่วยงาน
+                    </span>
+                    <label class="switch">
+                        <input type="checkbox" id="Autho" onchange="Autho()">
+                        <span class="slider round"></span>
+                    </label>
+                </a>
+                <div id="authodetail" style="display:none">
+                    <div style="width: 100%;">
+                        <table style="margin-left: 60px;">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div _ngcontent-vby-c26="" class="hint-box" style="background-color: gold;">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        PMCU
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div _ngcontent-vby-c26="" class="hint-box" style="background-color: hotpink;">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        PRM
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div _ngcontent-vby-c26="" class="hint-box"
+                                            style="background-color: greenyellow;"></div>
+                                    </td>
+                                    <td>
+                                        อื่นๆ
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <a>
+                    <i class="fa">
+                        <img src="https://img.icons8.com/fluency-systems-regular/24/ffffff/border-all--v2.png"/>
+                    </i>
+                    <span class="nav-text">
+                        การแบ่งพื้นที่
+                    </span>
+                    <label class="switch">
+                        <input type="checkbox" id="Zone" onchange="Zone()">
+                        <span class="slider round"></span>
+                    </label>
+                </a>
+                <div id="zonedetail" style="display:none">
+                    <div style="width: 100%;">
+                        <table style="margin-left: 60px;">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div _ngcontent-vby-c26="" class="hint-box" style="background-color: skyblue;">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        พื้นที่การศึกษา
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div _ngcontent-vby-c26="" class="hint-box" style="background-color: mediumpurple;">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        พื้นที่พาณิชยกรรม
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div _ngcontent-vby-c26="" class="hint-box"
+                                            style="background-color: tomato;"></div>
+                                    </td>
+                                    <td>
+                                        พื้นที่ให้ส่วนราชการเช่าใช้
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <a
+                    style="width: 100%; background: transparent; font-family: 'CHULALONGKORN' sans-serif; font-size: 16px;">
+                    <i class="fa">
+                        <img src="https://img.icons8.com/small/24/ffffff/layers.png" />
+                    </i>
+                    <span class="nav-text" style="color: #DE5B8D; font-size: 18px; font-weight: bold;">
+                        ชั้นข้อมูล
+                    </span>
+                    <label class="switch">
+                        <input type="checkbox" style="display: none;">
+                        <span class="slider round" style="display: none;"></span>
+                    </label>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <i class="fa">
+                        <img src="https://img.icons8.com/small/24/ffffff/wallmount-camera.png" />
+                    </i>
+                    <span class="nav-text">
+                        ตำแหน่งกล้อง CCTV
+                    </span>
+                    <label class="switch">
+                        <input type="checkbox" id="CCTV" onchange="CCTV()">
+                        <span class="slider round"></span>
+                    </label>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <i class="fa">
+                        <img src="https://img.icons8.com/windows/24/ffffff/auto-rickshaw.png" />
+                    </i>
+                    <span class="nav-text">
+                        จุดบริการ MuvMi
+                    </span>
+                    <label class="switch">
+                        <input type="checkbox" id="MuvMi" onchange="MuvMi()">
+                        <span class="slider round"></span>
+                    </label>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <i class="fa">
+                        <img src="https://img.icons8.com/small/24/ffffff/bus2.png" />
+                    </i>
+                    <span class="nav-text">
+                        CU shuttle bus
+                    </span>
+                    <label class="switch">
+                        <input type="checkbox" id="shbus" onchange="shbus()">
+                        <span class="slider round"></span>
+                    </label>
+                </a>
+                <div id="shbusdetail" style="display:none">
+                    <div style="width: 100%;">
+                        <table style="margin-left: 60px;">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <img _ngcontent-qdc-c25="" class="detail-image"
+                                            src="/assets/image/LOGO_legend/ICON_shbus.svg">
+                                    </td>
+                                    <td>
+                                        จุดจอดรถโดยสาร
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <hr style="color: #DA7057; background-color: #DA7057;">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        เส้นเดินรถสาย 1
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <hr style="color: #5286BB; background-color: #5286BB;">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        เส้นเดินรถสาย 2
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <hr style="color: #8FBE7F; background-color: #8FBE7F;">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        เส้นเดินรถสาย 3
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <hr style="color: #F2D851; background-color: #F2D851;">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        เส้นเดินรถสาย 4
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <hr style="color: #B166A9; background-color: #B166A9;">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        เส้นเดินรถสาย 5
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <a
+                    style="width: 100%; background: transparent; font-family: 'CHULALONGKORN' sans-serif; font-size: 16px;">
+                    <i class="fa">
+                        <img src="https://img.icons8.com/small/24/ffffff/realtime-protection.png" />
+                    </i>
+                    <span class="nav-text" style="color: #DE5B8D; font-size: 18px; font-weight: bold;">
+                        ข้อมูลแบบ Realtime
+                    </span>
+                    <label class="switch">
+                        <input type="checkbox" style="display: none;">
+                        <span class="slider round" style="display: none;"></span>
+                    </label>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <i class="fa">
+                        <img src="https://img.icons8.com/small/24/ffffff/air-element.png" />
+                    </i>
+                    <span class="nav-text">
+                        PM 2.5
+                    </span>
+                    <label class="switch">
+                        <input type="checkbox" id="PM2.5" onchange="PM()">
+                        <span class="slider round"></span>
+                    </label>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <nav class="dashboard">
+        <ul>
+            <li>
+                <a style="width: 100%; background: transparent; margin-top: 90px;">
+                    <i class="fa" style="font-style: normal; font-size: 16px;">
+                        <div style="float: right; margin-right: 20px;">
+                            <span id="image"></span>
+                            ค่า PM 2.5 เฉลี่ย:
+                            <span id="avg" style="font-size: 36px; font-weight: bold;"></span>
+                            µg/m<sup>3</sup>
+                        </div>
+                    </i>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <i class="fa" style="float: right;">
+                        <img src="https://img.icons8.com/material-sharp/36/ffffff/bar-chart.png" />
+                    </i>
+                    <span class="nav-text" style="left: 50px;">
+                        ข้อมูล PM 2.5 รายวัน
+                    </span>
+                    <label class="switch">
+                        <input type="checkbox" id="bar" onchange="barChart()">
+                        <span class="slider round" style="top: -10px; margin-bottom: 10px;"></span>
+                    </label>
+
+                </a>
+                <div id="barchart">
+                    <canvas id="myBarChart" style="width: 300px; height: 300px;"></canvas>
+                </div>
+            </li>
+            <li>
+                <a
+                    style="width: 100%; background: transparent; font-family: 'CHULALONGKORN' sans-serif; font-size: 16px;">
+                    <i class="fa" style="float: right; margin-top: 10px;">
+                        <img src="https://img.icons8.com/small/36/ffffff/pie-chart.png" style="margin-left: 10px;" />
+                    </i>
+                    <span class="nav-text" style="color: #DE5B8D; font-size: 18px; font-weight: bold;">
+                        สัดส่วนข้อมูล
+                    </span>
+                    <label class="switch">
+                        <input type="checkbox" style="display: none;">
+                        <span class="slider round" style="display: none;"></span>
+                    </label>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <i class="fa" style="float: right;">
+                    </i>
+                    <span class="nav-text" style="left: 50px;">
+                        ความสูงอาคาร
+                    </span>
+                    <label class="switch">
+                        <input type="checkbox" id="pie" onchange="pieChart()">
+                        <span class="slider round" style="top: -10px; margin-bottom: 10px;"></span>
+                    </label>
+                </a>
+                <div id="piechart">
+                    <canvas id="myPieChart" style="width: 100%;"></canvas>
+                </div>
+            </li>
+            <li>
+                <a>
+                    <i class="fa" style="float: right;">
+                    </i>
+                    <span class="nav-text" style="left: 50px;">
+                        หน่วยงาน
+                    </span>
+                    <label class="switch">
+                        <input type="checkbox" id="pie2" onchange="pieChart2()">
+                        <span class="slider round" style="top: -10px; margin-bottom: 10px;"></span>
+                    </label>
+                </a>
+                <div id="piechart2">
+                    <canvas id="myPieChart2" style="width: 100%;"></canvas>
+                </div>
+            </li>
+            <li>
+                <a>
+                    <i class="fa" style="float: right;">
+                    </i>
+                    <span class="nav-text" style="left: 50px;">
+                        การแบ่งพื้นที่
+                    </span>
+                    <label class="switch">
+                        <input type="checkbox" id="pie3" onchange="pieChart3()">
+                        <span class="slider round" style="top: -10px; margin-bottom: 10px;"></span>
+                    </label>
+                </a>
+                <div id="piechart3">
+                    <canvas id="myPieChart3" style="width: 100%;"></canvas>
+                </div>
+            </li>
+            <li>
+                <a
+                    style="width: 100%; background: transparent; font-family: 'CHULALONGKORN' sans-serif; font-size: 16px;">
+                    <i class="fa"></i>
+                    <span class="nav-text" style="left: 110px;">
+                        ตำแหน่งกล้อง CCTV:
+                        <span style="color: #DE5B8D; font-size: 36px; font-weight: bold;">207</span>
+                        จุด
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a
+                    style="width: 100%; background: transparent; font-family: 'CHULALONGKORN' sans-serif; font-size: 16px;">
+                    <i class="fa"></i>
+                    <span class="nav-text" style="left: 110px;">
+                        จุดบริการ MuvMi:
+                        <span style="color: #DE5B8D; font-size: 36px; font-weight: bold;">115</span>
+                        จุด
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a
+                    style="width: 100%; background: transparent; font-family: 'CHULALONGKORN' sans-serif; font-size: 16px;">
+                    <i class="fa"></i>
+                    <span class="nav-text" style="left: 110px;">
+                        จุดจอดรถโดยสาร CU shuttle bus:
+                        <span style="color: #DE5B8D; font-size: 36px; font-weight: bold;">77</span>
+                        จุด
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <script src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+@font-face {
+  font-family: CHULALONGKORN;
+  src: url(/assets/fonts/chulalongkorn/CHULALONGKORNReg.otf) format("opentype"),
+    url(/assets/fonts/chulalongkorn/CHULALONGKORNReg.otf) format("opentype");
+}
+* {
+  font-family: CHULALONGKORN;
+}
+.nav-separater,
+.navbar {
+  height: 80px;
+}
+.container-with-nav {
+  height: calc(100vh - 80px);
+}
+.pmd-switch label .pmd-switch-label,
+.pmd-switch label input[type="checkbox"] + .pmd-switch-label {
+  background-color: #d3d3d3 !important;
+}
+.pmd-switch label .pmd-switch-label:after {
+  background-color: grey;
+}
+.pmd-switch label input[type="checkbox"]:checked + .pmd-switch-label:after {
+  background-color: #dc5f8f;
+}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background-color: hsla(0, 0%, 100%, 0.85);
+}
+.leaflet-control-rotate-toggle {
+  -webkit-user-drag: none;
+}

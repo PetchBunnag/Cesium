@@ -1,0 +1,18 @@
+{
+"type": "FeatureCollection",
+"name": "pm_data",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "id": 10, "name": "อาคารจามจุรี 9", "owner": "cusc", "type": "outdoor" }, "geometry": { "type": "Point", "coordinates": [ 100.525886077060846, 13.73597368 ] } },
+{ "type": "Feature", "properties": { "id": 11, "name": "อาคารจุฬานิวาส", "owner": "cusc", "type": "outdoor" }, "geometry": { "type": "Point", "coordinates": [ 100.526076352877851, 13.74164417 ] } },
+{ "type": "Feature", "properties": { "id": 18, "name": "อาคารไชยยศสมบัติ", "owner": "cusc", "type": "outdoor" }, "geometry": { "type": "Point", "coordinates": [ 100.53003991056076, 13.73411039 ] } },
+{ "type": "Feature", "properties": { "id": 19, "name": "อาคารสำราญราษฎร์บริรักษ์", "owner": "cusc", "type": "outdoor" }, "geometry": { "type": "Point", "coordinates": [ 100.533161428020804, 13.73471327 ] } },
+{ "type": "Feature", "properties": { "id": 24, "name": "อาคารมหาจักรีสิรินธร", "owner": "cusc", "type": "outdoor" }, "geometry": { "type": "Point", "coordinates": [ 100.53399404879255, 13.739344287293225 ] } },
+{ "type": "Feature", "properties": { "id": 26, "name": "อาคารเศรษฐศาสตร์", "owner": "cusc", "type": "outdoor" }, "geometry": { "type": "Point", "coordinates": [ 100.531582652583054, 13.734324134723387 ] } },
+{ "type": "Feature", "properties": { "id": 28, "name": "อาคารเปรมบุรฉัตร", "owner": "cusc", "type": "outdoor" }, "geometry": { "type": "Point", "coordinates": [ 100.53229318063741, 13.735187665 ] } },
+{ "type": "Feature", "properties": { "id": 32, "name": "อาคารพูนทรัพย์ นพวงศ์ ณ อยุธยา", "owner": "cusc", "type": "outdoor" }, "geometry": { "type": "Point", "coordinates": [ 100.528382860875467, 13.736911285 ] } },
+{ "type": "Feature", "properties": { "id": 33, "name": "อาคารอนุสรณ์ 50 ปี", "owner": "cusc", "type": "outdoor" }, "geometry": { "type": "Point", "coordinates": [ 100.529502623657265, 13.733906635 ] } },
+{ "type": "Feature", "properties": { "id": 38, "name": "อาคารสัตววิทยวิจักษ์", "owner": "cusc", "type": "outdoor" }, "geometry": { "type": "Point", "coordinates": [ 100.534148558840656, 13.74242875 ] } },
+{ "type": "Feature", "properties": { "id": 64, "name": "อาคารวิศิษฐ์ ประจวบเหมาะ", "owner": "cusense", "type": "outdoor" }, "geometry": { "type": "Point", "coordinates": [ 100.532503893603035, 13.73417826 ] } }
+]
+}

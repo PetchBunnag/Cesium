@@ -1,0 +1,1 @@
+C:\Python310\python.exe "D:\InfraPlus\script.py" pause
