@@ -12,13 +12,14 @@
 				useEntitiesIfAvailable: true, //whether to use entities if a Viewer is supplied or always use an ImageryProvider
 				minCanvasSize: 700,           // minimum size (in pixels) for the heatmap canvas
 				maxCanvasSize: 2000,          // maximum size (in pixels) for the heatmap canvas
-				radiusFactor: 15,             // data point size factor used if no radius is given (the greater of height and width divided by this number yields the used radius)
+				radiusFactor: 10,             // data point size factor used if no radius is given (the greater of height and width divided by this number yields the used radius)
 				spacingFactor: 1.5,           // extra space around the borders (point radius multiplied by this number yields the spacing)
 				maxOpacity: 0.8,              // the maximum opacity used if not given in the heatmap options object
 				minOpacity: 0.1,              // the minimum opacity used if not given in the heatmap options object
-				blur: 0.85,                   // the blur used if not given in the heatmap options object
+				blur: 0.75,                   // the blur used if not given in the heatmap options object
 				gradient: {                   // the gradient used if not given in the heatmap options object
-					'.3': 'blue',
+					'.15': 'blue',
+					'.3': 'green',
 					'.65': 'yellow',
 					'.8': 'orange',
 					'.95': 'red'
