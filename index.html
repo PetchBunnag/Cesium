@@ -44,6 +44,14 @@
             z-index: 1;
         }
 
+        .logo-left {
+            display: block;
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            z-index: 1001;
+        }
+
         .hint-box[_ngcontent-vby-c26] {
             height: 15px;
             width: 15px;
@@ -274,6 +282,11 @@
 
 <body>
     <div id="cesiumContainer" class="fullSize"></div>
+    <div class="logo-left">
+        <a href="https://www.chula.ac.th/" target="_blank">
+            <img title="" src="./Build/Cesium/Assets/Images/LOGO_chula_pmcu.svg" style="height: 75px;">
+        </a>
+    </div>
     <div id="loadingOverlay">
         <h1>Loading...</h1>
     </div>
@@ -281,18 +294,7 @@
         <ul>
             <li>
                 <a
-                    style="width: 100%; background: transparent; font-family: 'CHULALONGKORN' sans-serif; font-size: 16px;"></a>
-                <span class="nav-text">
-                    <a href="https://www.chula.ac.th/" target="_blank">
-                        <img title="" src="./Build/Cesium/Assets/Images/LOGO_chula_pmcu.svg"
-                            style="height: 75px; position: relative; left: 60px; margin-top: 5px; margin-bottom: 60px;">
-                    </a>
-                </span>
-                </a>
-            </li>
-            <li>
-                <a
-                    style="width: 100%; background: transparent; font-family: 'CHULALONGKORN' sans-serif; font-size: 16px;">
+                    style="width: 100%; background: transparent; font-family: 'CHULALONGKORN' sans-serif; font-size: 16px; margin-top: 120px;">
                     <i class="fa">
                         <img src="https://img.icons8.com/small/24/ffffff/building--v1.png" />
                     </i>
@@ -444,7 +446,7 @@
             <li>
                 <a>
                     <i class="fa">
-                        <img src="https://img.icons8.com/fluency-systems-regular/24/ffffff/border-all--v2.png"/>
+                        <img src="https://img.icons8.com/fluency-systems-regular/24/ffffff/border-all--v2.png" />
                     </i>
                     <span class="nav-text">
                         การแบ่งพื้นที่
@@ -469,7 +471,8 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <div _ngcontent-vby-c26="" class="hint-box" style="background-color: mediumpurple;">
+                                        <div _ngcontent-vby-c26="" class="hint-box"
+                                            style="background-color: mediumpurple;">
                                         </div>
                                     </td>
                                     <td>
@@ -478,8 +481,8 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <div _ngcontent-vby-c26="" class="hint-box"
-                                            style="background-color: tomato;"></div>
+                                        <div _ngcontent-vby-c26="" class="hint-box" style="background-color: tomato;">
+                                        </div>
                                     </td>
                                     <td>
                                         พื้นที่ให้ส่วนราชการเช่าใช้
