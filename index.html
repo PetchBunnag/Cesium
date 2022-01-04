@@ -19,7 +19,7 @@
     <script type="text/javascript" src="./Apps/jquery-ui.min.js"></script>
     <script src="./CesiumHeatmap-master/CesiumHeatmap.js"></script>
     <script src="./CesiumHeatmap-master/HeatmapImageryProvider.js"></script>
-    <script src="data.js"></script>
+    <!-- <script src="data.js"></script> -->
     <script src="./ajax/libs/Chart.js/2.9.4/Chart.js"></script>
     <style>
         @import url(../Apps/Sandcastle/templates/bucket.css);
@@ -632,6 +632,7 @@
                         <input type="checkbox" id="PM2.5" onchange="PM()">
                         <span class="slider round"></span>
                     </label>
+                    <p id="demo"></p>
                 </a>
             </li>
         </ul>
@@ -665,7 +666,7 @@
 
                 </a>
                 <div id="barchart">
-                    <canvas id="myBarChart" style="width: 300px; height: 300px;"></canvas>
+                    <canvas id="myBarChart" style="width: 100%; height: 300px;"></canvas>
                 </div>
             </li>
             <li>

@@ -294,6 +294,76 @@ function shbus() {
     }
 }
 
+function Get(yourUrl) {
+    var Httpreq = new XMLHttpRequest(); // a new request
+    Httpreq.open("GET", yourUrl, false);
+    Httpreq.send(null);
+    return Httpreq.responseText;
+}
+
+var json_obj = JSON.parse(Get('http://159.138.252.132:9000/api/v1/pm_sensor/data'));
+let sensor_id = []
+let sensor_name = []
+let pm_value = []
+for (var i in json_obj.data) {
+    let pm25 = `${json_obj.data[i]["pm2.5"]}`
+    let sensor = `${json_obj.data[i]["name"]}`
+    let id = `${json_obj.data[i]["id"]}`
+    if (pm25 == '-') {
+        let pm25 = 0;
+        pm_value.push(parseFloat(pm25));
+        sensor_name.push(sensor);
+        sensor_id.push(parseInt(id));
+        
+    }
+    else {
+        pm_value.push(parseFloat(pm25));
+        sensor_name.push(sensor);
+        sensor_id.push(parseInt(id));
+        sensor_id.sort(function(a, b){return a - b});
+    }
+}
+
+// คำนวณค่าเฉลี่ย pm 2.5
+let avg = pm_value.reduce((acc, n) => acc + n) / pm_value.length
+
+document.getElementById("avg").innerHTML = avg.toFixed(3);
+
+// นำเข้า logo การแบ่งเกณฑ์คุณภาพอากาศ
+var blue_img = '<img src="SVG/excellent.svg" height="40px">';
+var green_img = '<img src="SVG/good.svg" height="40px">';
+var yellow_img = '<img src="SVG/moderate.svg" height="40px">';
+var orange_img = '<img src="SVG/bad.svg" height="40px">';
+var red_img = '<img src="SVG/unhealthy.svg" height="40px">';
+
+// กำหนดเงื่อนไขการแสดงผล logo การแบ่งเกณฑ์คุณภาพอากาศ และสีของ font ตามค่าเฉลี่ย pm 2.5 ที่ได้คำนวณแล้ว
+var avgcolor = function () {
+    if (avg <= 25) {
+        document.getElementById("avg").style.color = '#00C9FF';
+        document.getElementById("image").innerHTML = blue_img;
+    }
+    else if (avg <= 50) {
+        document.getElementById("avg").style.color = '#83E702';
+        document.getElementById("image").innerHTML = green_img;
+    }
+    else if (avg <= 100) {
+        document.getElementById("avg").style.color = '#F6FF36';
+        document.getElementById("image").innerHTML = yellow_img;
+    }
+    else if (avg <= 200) {
+        document.getElementById("avg").style.color = '#F93';
+        document.getElementById("image").innerHTML = orange_img;
+    }
+    else if (avg > 200) {
+        document.getElementById("avg").style.color = '#F33';
+        document.getElementById("image").innerHTML = red_img;
+    }
+    else {
+        document.getElementById("avg").style.color = '#4C4C4C';
+    }
+}
+avgcolor();
+
 pm = Cesium.GeoJsonDataSource.load("pm_data.geojson");
 
 let bounds = {
@@ -313,24 +383,107 @@ let heatMap = CesiumHeatmap.create(
     }
 );
 
-const x = [100.52589, 100.52606, 100.53004, 100.53316, 100.53399, 100.53158, 100.53229, 100.52838, 100.5295, 100.53415, 100.5325]
-const y = [13.73597, 13.74154, 13.73411, 13.73471, 13.73934, 13.73432, 13.73519, 13.73691, 13.73391, 13.74243, 13.73418]
+const x = [
+    100.52827082672026,
+    100.530735495,
+    100.53336099529372,
+    100.53362132126873,
+    100.52897664922266,
+    100.5284448830326,
+    100.52588761057089,
+    100.52607772349693,
+    100.52562212138446,
+    100.5300350645523,
+    100.53118969990342,
+    100.52616823237871,
+    100.5286910343361,
+    100.52703400403058,
+    100.53281971020373,
+    100.52671494523415,
+    100.52701860241476,
+    100.53394516877444,
+    100.53251041021073,
+    100.53158436137483,
+    100.53273926491897,
+    100.53499334013432,
+    100.5341594851453,
+    100.53329814373315,
+    100.53644656463388,
+    100.52949799535911,
+    100.52525116850217,
+    100.53399404795518,
+    100.53052842650057
+]
+const y = [
+    13.73437807782637,
+    13.744031875,
+    13.742478828746677,
+    13.734059158066245,
+    13.738528542783136,
+    13.738921753681495,
+    13.735983793168788,
+    13.741653209543246,
+    13.744094289184645,
+    13.734078441238907,
+    13.73984616064568,
+    13.74106230509176,
+    13.737779598190468,
+    13.740753337701406,
+    13.73571061680461,
+    13.737808937330932,
+    13.74212954226,
+    13.736336927303764,
+    13.734159929929644,
+    13.734335392970877,
+    13.742677621881011,
+    13.743392578426702,
+    13.742488536798245,
+    13.73471079449726,
+    13.733036368027712,
+    13.733937403248515,
+    13.737400789545548,
+    13.739344281202982,
+    13.735987139477658
+]
 
 let data = [
-    { x: x[0], y: y[0], value: value[0] },
-    { x: x[1], y: y[1], value: value[1] },
-    { x: x[2], y: y[2], value: value[2] },
-    { x: x[3], y: y[3], value: value[3] },
-    { x: x[4], y: y[4], value: value[4] },
-    { x: x[5], y: y[5], value: value[5] },
-    { x: x[6], y: y[6], value: value[6] },
-    { x: x[7], y: y[7], value: value[7] },
-    { x: x[8], y: y[8], value: value[8] },
-    { x: x[9], y: y[9], value: value[9] },
-    { x: x[10], y: y[10], value: value[10] },
+    { x: x[0], y: y[0], value: pm_value[33] },
+    { x: x[1], y: y[1], value: pm_value[5] },
+    { x: x[2], y: y[2], value: pm_value[20] },
+    { x: x[3], y: y[3], value: pm_value[27] },
+    { x: x[4], y: y[4], value: pm_value[7] },
+    { x: x[5], y: y[5], value: pm_value[31] },
+    { x: x[6], y: y[6], value: pm_value[3] },
+    { x: x[7], y: y[7], value: pm_value[4] },
+    { x: x[8], y: y[8], value: pm_value[34] },
+    { x: x[9], y: y[9], value: pm_value[9] },
+    { x: x[10], y: y[10], value: pm_value[15] },
+    { x: x[11], y: y[11], value: pm_value[2] },
+    { x: x[12], y: y[12], value: pm_value[14] },
+    { x: x[13], y: y[13], value: pm_value[24] },
+    { x: x[14], y: y[14], value: pm_value[17] },
+    { x: x[15], y: y[15], value: pm_value[42] },
+    { x: x[16], y: y[16], value: pm_value[9] },
+    { x: x[17], y: y[17], value: pm_value[48] },
+    { x: x[18], y: y[18], value: pm_value[18] },
+    { x: x[19], y: y[19], value: pm_value[29] },
+    { x: x[20], y: y[20], value: pm_value[16] },
+    { x: x[21], y: y[21], value: pm_value[8] },
+    { x: x[22], y: y[22], value: pm_value[22] },
+    { x: x[23], y: y[23], value: pm_value[19] },
+    { x: x[24], y: y[24], value: pm_value[43] },
+    { x: x[25], y: y[25], value: pm_value[6] },
+    { x: x[26], y: y[26], value: pm_value[10] },
+    { x: x[27], y: y[27], value: pm_value[13] },
+    { x: x[28], y: y[28], value: pm_value[12] },
+    { x: x[29], y: y[29], value: pm_value[1] }
 ];
 let valueMin = 0;
-let valueMax = 20;
+let valueMax = 50;
+
+console.log(x[0])
+console.log(y[0])
+console.log(pm_value[33])
 
 // นำเข้า logo pin pm 2.5 แต่ละสี และกำหนดตัวแปรที่จะแสดงผลที่แต่ละจุด
 const location_gray = 'assets/svg/location-gray.svg'
@@ -347,30 +500,29 @@ const fillColor = Cesium.Color.BLACK
 const outlineColor = Cesium.Color.WHITE
 const outlineWidth = 2
 const style = Cesium.LabelStyle.FILL_AND_OUTLINE
-const pixelOffset = new Cesium.Cartesian2(0, -45)
+const pixelOffset = new Cesium.Cartesian2(0, -35)
+
 
 // แสดง heatmap ของ pm 2.5
 function PM() {
     var checkBox = document.getElementById("PM2.5");
     var pmdetail = document.getElementById("pm2.5detail");
     if (checkBox.checked == true) {
-        // add data to heatmap
         heatMap.setWGS84Data(valueMin, valueMax, data);
         pm.then(function (dataSource) {
             viewer.dataSources.add(dataSource);
             var entities = dataSource.entities.values;
             for (var i = 0; i < entities.length; i++) {
                 var entity = entities[i];
-                var id = entity.properties.id;
+                entity.description = '<span style="font-weight: bold;"> PM 2.5: </span>' + pm_value[i].toFixed(3) + ' µg/m<sup>3</sup>'
                 entity.billboard = billboards.get(3);
-                if (id = 10) {
-                    var j = 0;
-                    if (value[j] == 0) {
+                for (j = 0; j < 30; j++) {
+                    if (pm_value[j] == 0) {
                         viewer.entities.add({
                             position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
                             billboard: {
                                 image: location_gray,
-                                scale: 0.5,
+                                scale: 0.4,
                                 verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                             },
                             label: {
@@ -386,16 +538,16 @@ function PM() {
                             },
                         });
                     }
-                    else if (value[j] <= 25) {
+                    else if (pm_value[j] <= 25) {
                         viewer.entities.add({
                             position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
                             billboard: {
                                 image: location_blue,
-                                scale: 0.5,
+                                scale: 0.4,
                                 verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                             },
                             label: {
-                                text: textName + value[j].toFixed(3),
+                                text: textName + Math.round(pm_value[j]),
                                 font,
                                 backgroundColor,
                                 showBackground,
@@ -407,16 +559,16 @@ function PM() {
                             },
                         });
                     }
-                    else if (value[j] <= 37) {
+                    else if (pm_value[j] <= 50) {
                         viewer.entities.add({
                             position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
                             billboard: {
                                 image: location_green,
-                                scale: 0.5,
+                                scale: 0.4,
                                 verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                             },
                             label: {
-                                text: textName + value[j].toFixed(3),
+                                text: textName + Math.round(pm_value[j]),
                                 font,
                                 backgroundColor,
                                 showBackground,
@@ -428,16 +580,16 @@ function PM() {
                             },
                         });
                     }
-                    else if (value[j] <= 50) {
+                    else if (pm_value[j] <= 100) {
                         viewer.entities.add({
                             position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
                             billboard: {
                                 image: location_yellow,
-                                scale: 0.5,
+                                scale: 0.4,
                                 verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                             },
                             label: {
-                                text: textName + value[j].toFixed(3),
+                                text: textName + Math.round(pm_value[j]),
                                 font,
                                 backgroundColor,
                                 showBackground,
@@ -449,16 +601,16 @@ function PM() {
                             },
                         });
                     }
-                    else if (value[j] <= 90) {
+                    else if (pm_value[j] <= 200) {
                         viewer.entities.add({
                             position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
                             billboard: {
                                 image: location_orange,
-                                scale: 0.5,
+                                scale: 0.4,
                                 verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                             },
                             label: {
-                                text: textName + value[j].toFixed(3),
+                                text: textName + Math.round(pm_value[j]),
                                 font,
                                 backgroundColor,
                                 showBackground,
@@ -470,1305 +622,16 @@ function PM() {
                             },
                         });
                     }
-                    else {
+                    else if (pm_value[j] > 200) {
                         viewer.entities.add({
                             position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
                             billboard: {
                                 image: location_red,
-                                scale: 0.5,
+                                scale: 0.4,
                                 verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                             },
                             label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                }
-                if (id = 11) {
-                    var j = 1;
-                    if (value[j] == 0) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_gray,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: "N/A",
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 25) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_blue,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 37) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_green,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 50) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_yellow,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 90) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_orange,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_red,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                }
-                if (id = 18) {
-                    var j = 2;
-                    if (value[j] == 0) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_gray,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: "N/A",
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 25) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_blue,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 37) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_green,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 50) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_yellow,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 90) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_orange,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_red,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                }
-                if (id = 19) {
-                    var j = 3;
-                    if (value[j] == 0) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_gray,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: "N/A",
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 25) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_blue,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 37) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_green,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 50) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_yellow,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 90) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_orange,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_red,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                }
-                if (id = 24) {
-                    var j = 4;
-                    if (value[j] == 0) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_gray,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: "N/A",
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 25) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_blue,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 37) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_green,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 50) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_yellow,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 90) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_orange,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_red,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                }
-                if (id = 26) {
-                    var j = 5;
-                    if (value[j] == 0) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_gray,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: "N/A",
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 25) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_blue,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 37) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_green,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 50) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_yellow,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 90) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_orange,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_red,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                }
-                if (id = 28) {
-                    var j = 6;
-                    if (value[j] == 0) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_gray,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: "N/A",
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 25) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_blue,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 37) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_green,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 50) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_yellow,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 90) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_orange,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_red,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                }
-                if (id = 32) {
-                    var j = 7;
-                    if (value[j] == 0) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_gray,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: "N/A",
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 25) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_blue,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 37) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_green,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 50) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_yellow,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 90) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_orange,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_red,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                }
-                if (id = 33) {
-                    var j = 8;
-                    if (value[j] == 0) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_gray,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: "N/A", font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 25) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_blue,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 37) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_green,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 50) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_yellow,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 90) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_orange,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_red,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                }
-                if (id = 38) {
-                    var j = 9;
-                    if (value[j] == 0) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_gray,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: "N/A",
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 25) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_blue,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 37) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_green,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 50) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_yellow,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 90) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_orange,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_red,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                }
-                if (id = 64) {
-                    var j = 10;
-                    if (value[j] == 0) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_gray,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: "N/A",
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 25) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_blue,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 37) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_green,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 50) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_yellow,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else if (value[j] <= 90) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_orange,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
-                    }
-                    else {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_red,
-                                scale: 0.5,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + value[j].toFixed(3),
+                                text: textName + Math.round(pm_value[j]),
                                 font,
                                 backgroundColor,
                                 showBackground,
@@ -1782,8 +645,7 @@ function PM() {
                     }
                 }
             }
-            pmdetail.style.display = "block";
-        });
+        })
     }
     else {
         pm.then(function (dataSource) {
@@ -1794,49 +656,11 @@ function PM() {
     }
 }
 
-// คำนวณค่าเฉลี่ย pm 2.5
-let avg = (value[0] + value[1] + value[2] + value[3] + value[4] + value[5] + value[6] + value[7] + value[8] + value[9] + value[10]) / 11
-
-document.getElementById("avg").innerHTML = avg.toFixed(3);
-
-// นำเข้า logo การแบ่งเกณฑ์คุณภาพอากาศ
-var blue_img = '<img src="SVG/excellent.svg" height="40px">';
-var green_img = '<img src="SVG/good.svg" height="40px">';
-var yellow_img = '<img src="SVG/moderate.svg" height="40px">';
-var orange_img = '<img src="SVG/bad.svg" height="40px">';
-var red_img = '<img src="SVG/unhealthy.svg" height="40px">';
-
-// กำหนดเงื่อนไขการแสดงผล logo การแบ่งเกณฑ์คุณภาพอากาศ และสีของ font ตามค่าเฉลี่ย pm 2.5 ที่ได้คำนวณแล้ว
-var avgcolor = function () {
-    if (avg <= 25) {
-        document.getElementById("avg").style.color = '#00C9FF';
-        document.getElementById("image").innerHTML = blue_img;
-    }
-    else if (avg <= 37) {
-        document.getElementById("avg").style.color = '#83E702';
-        document.getElementById("image").innerHTML = green_img;
-    }
-    else if (avg <= 50) {
-        document.getElementById("avg").style.color = '#F6FF36';
-        document.getElementById("image").innerHTML = yellow_img;
-    }
-    else if (avg <= 90) {
-        document.getElementById("avg").style.color = '#F93';
-        document.getElementById("image").innerHTML = orange_img;
-    }
-    else if (avg > 90) {
-        document.getElementById("avg").style.color = '#F33';
-        document.getElementById("image").innerHTML = red_img;
-    }
-    else {
-        document.getElementById("avg").style.color = '#4C4C4C';
-    }
-}
-avgcolor();
-
 // กำหนดค่าที่จะแสดงผลในแกน x, y ของ bar chart และสีของ bar chart
-var xValues = ["อาคารจามจุรี 9", "อาคารจุฬานิวาส", "อาคารชัยยศสมบัติ", "อาคารสำราญราษฎร์บริรักษ์", "อาคารมหาจักรีสิรินธร", "อาคารเศรษฐศาสตร์", "อาคารเปรมบุรฉัตร", "อาคารพูนทรัพย์ นพวงศ์ ณ อยุธยา", "อาคารอนุสรณ์ 50 ปี", "อาคารสัตววิทยวิจักษ์", "อาคารวิศิษฐ์ ประจวบเหมาะ"];
-var yValues = [value[0].toFixed(3), value[1].toFixed(3), value[2].toFixed(3), value[3].toFixed(3), value[4].toFixed(3), value[5].toFixed(3), value[6].toFixed(3), value[7].toFixed(3), value[8].toFixed(3), value[9].toFixed(3), value[10].toFixed(3)];
+// var xValues = ["อาคารจามจุรี 2", "อาคารจามจุรี 9", "อาคารจุฬานิวาส", "อาคารไชยยศสมบัติ", "อาคารนารถ โพธิประสาท", "อาคารวิศิษฐ์ ประจวบเหมาะ", "อาคารเศรษฐศาสตร์", "อาคารสมเด็จย่า 93", "อาคารสำราญราษฎร์บริรักษ์", "อาคารอนุสรณ์ 50 ปี", "อาคารมหาจักรีสิรินธร", "อาคารมหามกุฎ"];
+// var yValues = [value[0].toFixed(3), value[1].toFixed(3), value[2].toFixed(3), value[3].toFixed(3), value[4].toFixed(3), value[5].toFixed(3), value[6].toFixed(3), value[7].toFixed(3), value[8].toFixed(3), value[9].toFixed(3), value[10].toFixed(3), value[11].toFixed(3)];
+var xValues = sensor_name;
+var yValues = pm_value;
 var barColors = "#de5b8d";
 
 // map ค่าในแกน x และ y เข้าด้วยกัน
