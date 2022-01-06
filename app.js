@@ -641,8 +641,6 @@ function PM() {
 }
 
 // กำหนดค่าที่จะแสดงผลในแกน x, y ของ bar chart และสีของ bar chart
-// var xValues = ["อาคารจามจุรี 2", "อาคารจามจุรี 9", "อาคารจุฬานิวาส", "อาคารไชยยศสมบัติ", "อาคารนารถ โพธิประสาท", "อาคารวิศิษฐ์ ประจวบเหมาะ", "อาคารเศรษฐศาสตร์", "อาคารสมเด็จย่า 93", "อาคารสำราญราษฎร์บริรักษ์", "อาคารอนุสรณ์ 50 ปี", "อาคารมหาจักรีสิรินธร", "อาคารมหามกุฎ"];
-// var yValues = [value[0].toFixed(3), value[1].toFixed(3), value[2].toFixed(3), value[3].toFixed(3), value[4].toFixed(3), value[5].toFixed(3), value[6].toFixed(3), value[7].toFixed(3), value[8].toFixed(3), value[9].toFixed(3), value[10].toFixed(3), value[11].toFixed(3)];
 var xValues = notnull_name_order;
 var yValues = float_value_order;
 var barColors = "#de5b8d";
