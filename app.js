@@ -302,8 +302,8 @@ function Get(yourUrl) {
 }
 
 var json_obj = JSON.parse(Get('http://159.138.252.132:9000/api/v1/pm_sensor/data'));
-let sensor_name = []
-let pm_value = []
+let sensor_name = [];
+let pm_value = [];
 for (var i in json_obj.data) {
     let pm25 = `${json_obj.data[i]["pm2.5"]}`
     let sensor = `${json_obj.data[i]["name"]}`
@@ -462,7 +462,7 @@ const y = [
 
 let data = [];
 for (var i = 0; i < value_order.length; i++) {
-    var data_value = {x: x[i], y: y[i], value: value_order[i]};
+    var data_value = { x: x[i], y: y[i], value: value_order[i] };
     data.push(data_value);
 }
 
@@ -640,7 +640,24 @@ function PM() {
     }
 }
 
-// กำหนดค่าที่จะแสดงผลในแกน x, y ของ bar chart และสีของ bar chart
+// let bld_name = [];
+// let power_value = [];
+// for (var i = 4; i < 248; i++) {
+//     if (i == 5 || i == 8 || i == 12 || i == 23 || i == 34 || i == 61 || i == 69 || i == 73 || i == 74 || i == 75 || i == 76 || i == 80 ||
+//         i == 103 || i == 132 || i == 133 || i == 134 || i == 135 || i == 143 || i == 146 || i == 164 ||
+//         i == 238 || i == 239 || i == 240 || i == 241 || i == 242) { continue; }
+//     var url = 'http://94.74.116.125:9000/api/v1/node/' + i + '/usage_profile/day/power';
+//     var json_obj_1 = JSON.parse(Get(url));
+//     let name = `${json_obj_1.data['name']}`
+//     let power = `${json_obj_1.data['power']}`
+//     bld_name.push(name);
+//     power_value.push(parseFloat(power));
+// }
+
+// // console.log(bld_name);
+// // console.log(power_value);
+
+// // กำหนดค่าที่จะแสดงผลในแกน x, y ของ bar chart และสีของ bar chart
 var xValues = notnull_name_order;
 var yValues = float_value_order;
 var barColors = "#de5b8d";
@@ -699,6 +716,65 @@ function barChart() {
         barChart.style.display = "none";
     }
 }
+
+// // กำหนดค่าที่จะแสดงผลในแกน x, y ของ bar chart
+// var xValues2 = bld_name;
+// var yValues2 = power_value;
+
+// // map ค่าในแกน x และ y เข้าด้วยกัน
+// let merged2 = xValues2.map((bar, i) => {
+//     return {
+//         "datapoint": yValues2[i],
+//         "label": xValues2[i]
+//     }
+// })
+
+// // จัดเรียง bar chart จากค่ามากไปน้อย
+// const dataSort2 = merged2.sort(function (b, a) {
+//     return a.datapoint - b.datapoint
+// });
+
+// const dp2 = [];
+// const lab2 = [];
+// for (i = 0; i < dataSort2.length; i++) {
+//     dp2.push(dataSort2[i].datapoint);
+//     lab2.push(dataSort2[i].label);
+// }
+
+// // กำหนดตัวแปรที่ใช้ในการแสดงผล bar chart
+// const barchartData2 = {
+//     labels: lab2,
+//     datasets: [{
+//         backgroundColor: barColors,
+//         data: dp2,
+//         footerFontColor: '#fff'
+//     }]
+// };
+
+// const barchartconfig2 = {
+//     type: "bar",
+//     data: barchartData2,
+//     options: {
+//         maintainAspectRatio: false,
+//         legend: { display: false },
+//         title: {
+//             display: true,
+//             text: 'ข้อมูลการใช้พลังงานเฉลี่ยรายอาคาร'
+//         }
+//     }
+// }
+
+// // แสดง bar chart ของการใช้พลังงาน
+// function barChart2() {
+//     var checkBox = document.getElementById("bar2");
+//     var barChart = document.getElementById("barchart2");
+//     if (checkBox.checked == true) {
+//         barChart.style.display = "block";
+//         new Chart("myBarChart2", barchartconfig2);
+//     } else {
+//         barChart.style.display = "none";
+//     }
+// }
 
 // แสดง pie chart การ classify ความสูงของอาคาร
 function pieChart() {
