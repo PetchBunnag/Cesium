@@ -38,6 +38,7 @@ function Buildings() {
             for (var i = 0; i < entities.length; i++) {
                 var entity = entities[i];
                 var id = entity.properties.id;
+                var zone = entity.properties.zone;
                 // if (id == 69) {
                 //     entity.description = '<img src="https://static.posttoday.com/media/content/2019/09/20/886EF6988A6044CB8DFDAFC870997CE2.jpg" style="display: block; width: 50%; margin-left: auto; margin-right: auto;">'
                 //         + '<p>สามย่านมิตรทาวน์ (Samyan Mitrtown) เป็นโครงการพัฒนาพื้นที่เชิงพาณิชยกรรมแบบผสมบริเวณหัวมุมตะวันตกเฉียงเหนือของสี่แยกสามย่าน ระหว่างถนนพระรามที่ 4 และถนนพญาไท โดยบริษัท เกษมทรัพย์ภักดี จำกัด (มหาชน) ได้ทำสัญญาเช่าที่ดินจำนวน 13 ไร่จากจุฬาลงกรณ์มหาวิทยาลัย เป็นระยะเวลา 30 ปี ภายในโครงการประกอบด้วยพื้นที่ค้าปลีก ที่อยู่อาศัย และอาคารสำนักงาน พื้นที่รวม 222,000 ตร.ม. ก่อสร้างตามแนวคิดห้องสมุดแห่งชีวิตของคนเมือง (Urban Life Library) ภายใต้งบลงทุนรวม 9,000 ล้านบาท พัฒนาโครงการโดย บริษัท แผ่นดินทอง พร็อพเพอร์ตี้ ดีเวลลอปเม้นท์ จำกัด (มหาชน) หรือ โกลเด้นแลนด์ และบริหารศูนย์การค้าโดย บริษัท เกษมทรัพย์ภักดี จำกัด ซึ่งเกิดขึ้นจากการร่วมทุนของบริษัท ทีซีซี แอสเซ็ทส์ (ไทยแลนด์) จำกัด และบริษัท โกลเด้น พร็อพเพอร์ตี้ เซอร์วิสเซส จำกัด</p>'
@@ -45,7 +46,12 @@ function Buildings() {
                 // };
                 var height = entity.properties.heigth_m;
                 var color = colorHash[id];
-                color = Cesium.Color.fromAlpha(Cesium.Color.TRANSPARENT, 0.01);
+                if (zone == 'A') {
+                    color = Cesium.Color.fromAlpha(Cesium.Color.TRANSPARENT, 0.01);
+                }
+                else {
+                    color = Cesium.Color.WHITE;
+                }
                 entity.polygon.material = color;
                 entity.polygon.outline = false;
                 entity.polygon.extrudedHeight = height;
