@@ -25,7 +25,7 @@ scene.camera.setView({
     endTransform: Cesium.Matrix4.IDENTITY,
 });
 
-var promise = Cesium.GeoJsonDataSource.load("polygon_bldg_buff.geojson");
+var promise = Cesium.GeoJsonDataSource.load("SampleData/geojson/polygon_bldg_buff.geojson");
 
 // แสดงอาคาร
 function Buildings() {
@@ -216,7 +216,7 @@ billboards.add({
     eyeOffset: new Cesium.Cartesian3(0, 0, -45),
 });
 
-cu_muvmi = Cesium.GeoJsonDataSource.load("cu_muvmi_point_sta.geojson");
+cu_muvmi = Cesium.GeoJsonDataSource.load("SampleData/geojson/cu_muvmi_point_sta.geojson");
 
 // แสดงจุดบริการ MuvMi
 function MuvMi() {
@@ -238,7 +238,7 @@ function MuvMi() {
     }
 }
 
-cu_cctv = Cesium.GeoJsonDataSource.load("cu_cctv.geojson");
+cu_cctv = Cesium.GeoJsonDataSource.load("SampleData/geojson/cu_cctv.geojson");
 
 // แสดงตำแหน่งกล้องวงจรปิด
 function CCTV() {
@@ -260,7 +260,7 @@ function CCTV() {
     }
 }
 
-bus_point_sta = Cesium.GeoJsonDataSource.load("bus_point_sta.geojson");
+bus_point_sta = Cesium.GeoJsonDataSource.load("SampleData/geojson/bus_point_sta.geojson");
 
 var bus_line;
 
@@ -384,7 +384,7 @@ var avgcolor = function () {
 }
 avgcolor();
 
-pm = Cesium.GeoJsonDataSource.load("pm_data.geojson");
+pm = Cesium.GeoJsonDataSource.load("SampleData/geojson/pm_data.geojson");
 
 let bounds = {
     west: 100.5214395,
@@ -907,4 +907,56 @@ function pieChart3() {
 function fire_hydrant() {
     var checkBox = document.getElementById("fire_hydrant");
     var fire_hydrant = getMultiOBJ("หัวดับเพลิง", 'SampleData/geojson/fire_hydrant.geojson', "SampleData/glbModel/fire_hy.glb");
+    function getMultiOBJ(name, path, urlmodel) {
+        $.getJSON(path, function (data) {
+            for (let i = 0; i < data.features.length; i++) {
+                let coordinates = data.features[i].geometry.coordinates
+                let entities = data.features[i].properties
+                let coord = Cesium.Cartesian3.fromDegrees(coordinates[0], coordinates[1], 0.0);
+                let heading = Cesium.Math.toRadians(entities.heading);
+                let pitch = 0;
+                let roll = 0;
+                let hpr = new Cesium.HeadingPitchRoll(heading, pitch, roll);
+                let orientation = Cesium.Transforms.headingPitchRollQuaternion(coord, hpr);
+                //console.log(name)
+                viewer.entities.add({
+                    name: name,
+                    description: "<b>" + name + "</b>",
+                    position: coord,
+                    orientation: orientation,
+                    model: {
+                        uri: urlmodel,
+                        show: 'True',
+                        shadows: 'enabled',
+                        scale: 1.0
+                    }
+                });
+            }
+        });
+    }
+}
+
+function electric_pole() {
+    var checkBox = document.getElementById("electric_pole");
+    var electric_pole = Cesium.IonResource.fromAssetId(167335) //166464 197363
+        .then(function (resource) {
+            $.getJSON('SampleData/geojson/electric_pole_point.geojson', function (data) {
+                for (let i = 0; i < data.features.length; i++) {
+                    let coordinates = data.features[i].geometry.coordinates
+                    //console.log( data.features[i].properties.heading )
+                    let coord = Cesium.Cartesian3.fromDegrees(coordinates[0], coordinates[1], 0.0);
+                    let hpr = new Cesium.HeadingPitchRoll(Cesium.Math.toRadians(data.features[i].properties.heading + 90), 0, 0);
+                    viewer.entities.add({
+                        position: coord,
+                        orientation: Cesium.Transforms.headingPitchRollQuaternion(coord, hpr),
+                        model: {
+                            uri: resource,
+                            show: 'True',
+                            shadows: 'enabled',
+                            scale: 1.5
+                        }
+                    });
+                }
+            })
+        });
 }
