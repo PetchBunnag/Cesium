@@ -903,3 +903,8 @@ function pieChart3() {
         pieChart.style.display = "none";
     }
 }
+
+function fire_hydrant() {
+    var checkBox = document.getElementById("fire_hydrant");
+    var fire_hydrant = getMultiOBJ("หัวดับเพลิง", 'SampleData/geojson/fire_hydrant.geojson', "SampleData/glbModel/fire_hy.glb");
+}
