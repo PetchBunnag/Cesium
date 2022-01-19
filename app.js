@@ -906,41 +906,9 @@ function pieChart3() {
 
 function fire_hydrant() {
     var checkBox = document.getElementById("fire_hydrant");
-    var fire_hydrant = getMultiOBJ("หัวดับเพลิง", 'SampleData/geojson/fire_hydrant.geojson', "SampleData/glbModel/fire_hy.glb");
-    function getMultiOBJ(name, path, urlmodel) {
-        $.getJSON(path, function (data) {
-            for (let i = 0; i < data.features.length; i++) {
-                let coordinates = data.features[i].geometry.coordinates
-                let entities = data.features[i].properties
-                let coord = Cesium.Cartesian3.fromDegrees(coordinates[0], coordinates[1], 0.0);
-                let heading = Cesium.Math.toRadians(entities.heading);
-                let pitch = 0;
-                let roll = 0;
-                let hpr = new Cesium.HeadingPitchRoll(heading, pitch, roll);
-                let orientation = Cesium.Transforms.headingPitchRollQuaternion(coord, hpr);
-                //console.log(name)
-                viewer.entities.add({
-                    name: name,
-                    description: "<b>" + name + "</b>",
-                    position: coord,
-                    orientation: orientation,
-                    model: {
-                        uri: urlmodel,
-                        show: 'True',
-                        shadows: 'enabled',
-                        scale: 1.0
-                    }
-                });
-            }
-        });
-    }
-}
-
-function electric_pole() {
-    var checkBox = document.getElementById("electric_pole");
-    var electric_pole = Cesium.IonResource.fromAssetId(167335) //166464 197363
-        .then(function (resource) {
-            $.getJSON('SampleData/geojson/electric_pole_point.geojson', function (data) {
+    if (checkBox.checked == true) {
+        var fire_hydrant = Cesium.IonResource.fromAssetId(164759).then(function (resource) {
+            $.getJSON('SampleData/geojson/fire_hydrant.geojson', function (data) {
                 for (let i = 0; i < data.features.length; i++) {
                     let coordinates = data.features[i].geometry.coordinates
                     //console.log( data.features[i].properties.heading )
@@ -959,4 +927,37 @@ function electric_pole() {
                 }
             })
         });
+    }
+    else {
+        viewer.entities.removeAll();
+    }
+}
+
+function electric_pole() {
+    var checkBox = document.getElementById("electric_pole");
+    if (checkBox.checked == true) {
+        var electric_pole = Cesium.IonResource.fromAssetId(167335).then(function (resource) {
+            $.getJSON('SampleData/geojson/electric_pole_point.geojson', function (data) {
+                for (let i = 0; i < data.features.length; i++) {
+                    let coordinates = data.features[i].geometry.coordinates
+                    //console.log( data.features[i].properties.heading )
+                    let coord = Cesium.Cartesian3.fromDegrees(coordinates[0], coordinates[1], 0.0);
+                    let hpr = new Cesium.HeadingPitchRoll(Cesium.Math.toRadians(data.features[i].properties.heading + 90), 0, 0);
+                    viewer.entities.add({
+                        position: coord,
+                        orientation: Cesium.Transforms.headingPitchRollQuaternion(coord, hpr),
+                        model: {
+                            uri: resource,
+                            show: 'True',
+                            shadows: 'enabled',
+                            scale: 1.0
+                        }
+                    });
+                }
+            })
+        });
+    }
+    else {
+        viewer.entities.removeAll();
+    }
 }
