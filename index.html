@@ -262,8 +262,66 @@
             overflow: hidden;
             -webkit-transition: width .05s linear;
             transition: width .05s linear;
-            /* z-index: 1000; */
             background-image: linear-gradient(to left, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0));
+        }
+
+        /* The container */
+        .container {
+            display: block;
+            position: absolute;
+            margin-top: 5px;
+            margin-left: -30px;
+            cursor: pointer;
+        }
+
+        /* Hide the browser's default radio button */
+        .container input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Create a custom radio button */
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            background-color: #eee;
+            border-radius: 50%;
+        }
+
+        /* On mouse-over, add a grey background color */
+        .container:hover input~.checkmark {
+            background-color: #ccc;
+        }
+
+        /* When the radio button is checked, add a blue background */
+        .container input:checked~.checkmark {
+            background-color: lime;
+        }
+
+        /* Create the indicator (the dot/circle - hidden when not checked) */
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        /* Show the indicator (dot/circle) when checked */
+        .container input:checked~.checkmark:after {
+            display: block;
+        }
+
+        /* Style the indicator (dot/circle) */
+        .container .checkmark:after {
+            top: 4px;
+            left: 4px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: white;
         }
     </style>
 </head>
@@ -281,8 +339,7 @@
     <nav class="main-menu">
         <ul>
             <li>
-                <a
-                    style="width: 100%; background: transparent; margin-top: 120px;">
+                <a style="width: 100%; background: transparent; margin-top: 120px;">
                     <i class="fa">
                         <img src="https://img.icons8.com/small/24/ffffff/building--v1.png">
                     </i>
@@ -303,9 +360,9 @@
                     <span class="nav-text">
                         โมเดลอาคาร 3 มิติ
                     </span>
-                    <label class="switch">
-                        <input type="checkbox" id="Buildings" onchange="Buildings()" checked>
-                        <span class="slider round"></span>
+                    <label class="container">
+                        <input type="radio" name="search_type" value="Buildings">
+                        <span class="checkmark"></span>
                     </label>
                 </a>
             </li>
@@ -323,9 +380,9 @@
                     <span class="nav-text">
                         ความสูงอาคาร
                     </span>
-                    <label class="switch">
-                        <input type="checkbox" id="Height" onchange="Height()">
-                        <span class="slider round"></span>
+                    <label class="container">
+                        <input type="radio" name="search_type" value="Height">
+                        <span class="checkmark"></span>
                     </label>
                 </a>
                 <div id="heightdetail" style="display:none">
@@ -390,9 +447,9 @@
                     <span class="nav-text">
                         หน่วยงาน
                     </span>
-                    <label class="switch">
-                        <input type="checkbox" id="Autho" onchange="Autho()">
-                        <span class="slider round"></span>
+                    <label class="container">
+                        <input type="radio" name="search_type" value="Autho">
+                        <span class="checkmark"></span>
                     </label>
                 </a>
                 <div id="authodetail" style="display:none">
@@ -439,9 +496,9 @@
                     <span class="nav-text">
                         การแบ่งพื้นที่
                     </span>
-                    <label class="switch">
-                        <input type="checkbox" id="Zone" onchange="Zone()">
-                        <span class="slider round"></span>
+                    <label class="container">
+                        <input type="radio" name="search_type" value="Zone">
+                        <span class="checkmark"></span>
                     </label>
                 </a>
                 <div id="zonedetail" style="display:none">
@@ -482,8 +539,7 @@
                 </div>
             </li>
             <li>
-                <a
-                    style="width: 100%; background: transparent;">
+                <a style="width: 100%; background: transparent;">
                     <i class="fa">
                         <img src="https://img.icons8.com/small/24/ffffff/layers.png">
                     </i>
@@ -606,36 +662,7 @@
                 </div>
             </li>
             <li>
-                <a>
-                    <i class="fa">
-                        <img src="https://img.icons8.com/ios-filled/24/ffffff/street-lamp.png">
-                    </i>
-                    <span class="nav-text">
-                        เสาไฟส่องสว่าง
-                    </span>
-                    <label class="switch">
-                        <input type="checkbox" id="electric_pole" onchange="electric_pole()">
-                        <span class="slider round"></span>
-                    </label>
-                </a>
-            </li>
-            <li>
-                <a>
-                    <i class="fa">
-                        <img src="https://img.icons8.com/small/24/ffffff/fire-hydrant--v1.png">
-                    </i>
-                    <span class="nav-text">
-                        หัวดับเพลิง
-                    </span>
-                    <label class="switch">
-                        <input type="checkbox" id="fire_hydrant" onchange="fire_hydrant()">
-                        <span class="slider round"></span>
-                    </label>
-                </a>
-            </li>
-            <li>
-                <a
-                    style="width: 100%; background: transparent;">
+                <a style="width: 100%; background: transparent;">
                     <i class="fa">
                         <img src="https://img.icons8.com/small/24/ffffff/realtime-protection.png">
                     </i>

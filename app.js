@@ -25,165 +25,217 @@ scene.camera.setView({
     endTransform: Cesium.Matrix4.IDENTITY,
 });
 
-var promise = Cesium.GeoJsonDataSource.load("SampleData/geojson/polygon_bldg_buff.geojson");
+var promise1 = Cesium.GeoJsonDataSource.load("SampleData/geojson/polygon_bldg_buff.geojson");
+var promise2 = Cesium.GeoJsonDataSource.load("SampleData/geojson/polygon_bldg_buff.geojson");
+var promise3 = Cesium.GeoJsonDataSource.load("SampleData/geojson/polygon_bldg_buff.geojson");
+var promise4 = Cesium.GeoJsonDataSource.load("SampleData/geojson/polygon_bldg_buff.geojson");
+var electric_pole = Cesium.IonResource.fromAssetId(167335);
+var fire_hydrant = Cesium.IonResource.fromAssetId(164759);
+var heightdetail = document.getElementById("heightdetail");
+var authodetail = document.getElementById("authodetail");
+var zonedetail = document.getElementById("zonedetail");
+var fire_hydrant = Cesium.IonResource.fromAssetId(164759)
+var electric_pole = Cesium.IonResource.fromAssetId(167335)
 
-// แสดงอาคาร
-function Buildings() {
-    var checkBox = document.getElementById("Buildings");
-    if (checkBox.checked == true) {
-        promise.then(function (dataSource) {
-            viewer.dataSources.add(dataSource);
-            var entities = dataSource.entities.values;
-            var colorHash = {};
-            for (var i = 0; i < entities.length; i++) {
-                var entity = entities[i];
-                var id = entity.properties.id;
-                var zone = entity.properties.zone;
-                // if (id == 69) {
-                //     entity.description = '<img src="https://static.posttoday.com/media/content/2019/09/20/886EF6988A6044CB8DFDAFC870997CE2.jpg" style="display: block; width: 50%; margin-left: auto; margin-right: auto;">'
-                //         + '<p>สามย่านมิตรทาวน์ (Samyan Mitrtown) เป็นโครงการพัฒนาพื้นที่เชิงพาณิชยกรรมแบบผสมบริเวณหัวมุมตะวันตกเฉียงเหนือของสี่แยกสามย่าน ระหว่างถนนพระรามที่ 4 และถนนพญาไท โดยบริษัท เกษมทรัพย์ภักดี จำกัด (มหาชน) ได้ทำสัญญาเช่าที่ดินจำนวน 13 ไร่จากจุฬาลงกรณ์มหาวิทยาลัย เป็นระยะเวลา 30 ปี ภายในโครงการประกอบด้วยพื้นที่ค้าปลีก ที่อยู่อาศัย และอาคารสำนักงาน พื้นที่รวม 222,000 ตร.ม. ก่อสร้างตามแนวคิดห้องสมุดแห่งชีวิตของคนเมือง (Urban Life Library) ภายใต้งบลงทุนรวม 9,000 ล้านบาท พัฒนาโครงการโดย บริษัท แผ่นดินทอง พร็อพเพอร์ตี้ ดีเวลลอปเม้นท์ จำกัด (มหาชน) หรือ โกลเด้นแลนด์ และบริหารศูนย์การค้าโดย บริษัท เกษมทรัพย์ภักดี จำกัด ซึ่งเกิดขึ้นจากการร่วมทุนของบริษัท ทีซีซี แอสเซ็ทส์ (ไทยแลนด์) จำกัด และบริษัท โกลเด้น พร็อพเพอร์ตี้ เซอร์วิสเซส จำกัด</p>'
-                //         + '<p>ที่มา: <a href="http://th.wikipedia.org/wiki/สามย่านมิตรทาวน์">Wikipedia</a></p>';
-                // };
-                var height = entity.properties.heigth_m;
-                var color = colorHash[id];
-                if (zone == 'A') {
-                    color = Cesium.Color.fromAlpha(Cesium.Color.TRANSPARENT, 0.01);
+fire_hydrant.then(function (resource) {
+    $.getJSON('SampleData/geojson/fire_hydrant.geojson', function (data) {
+        for (let i = 0; i < data.features.length; i++) {
+            let coordinates = data.features[i].geometry.coordinates
+            //console.log( data.features[i].properties.heading )
+            let coord = Cesium.Cartesian3.fromDegrees(coordinates[0], coordinates[1], 0.0);
+            let hpr = new Cesium.HeadingPitchRoll(Cesium.Math.toRadians(data.features[i].properties.heading + 90), 0, 0);
+            viewer.entities.add({
+                position: coord,
+                orientation: Cesium.Transforms.headingPitchRollQuaternion(coord, hpr),
+                model: {
+                    uri: resource,
+                    show: 'True',
+                    shadows: 'enabled',
+                    scale: 1.5
                 }
-                else {
-                    color = Cesium.Color.WHITE;
-                }
-                entity.polygon.material = color;
-                entity.polygon.outline = false;
-                entity.polygon.extrudedHeight = height;
-            }
-        })
+            });
+        }
+    })
+});
 
-        building = viewer.scene.primitives.add(
-            new Cesium.Cesium3DTileset({
-                url: Cesium.IonResource.fromAssetId(698805)
+electric_pole.then(function (resource) {
+    $.getJSON('SampleData/geojson/electric_pole_point.geojson', function (data) {
+        for (let i = 0; i < data.features.length; i++) {
+            let coordinates = data.features[i].geometry.coordinates
+            //console.log( data.features[i].properties.heading )
+            let coord = Cesium.Cartesian3.fromDegrees(coordinates[0], coordinates[1], 0.0);
+            let hpr = new Cesium.HeadingPitchRoll(Cesium.Math.toRadians(data.features[i].properties.heading + 90), 0, 0);
+            viewer.entities.add({
+                position: coord,
+                orientation: Cesium.Transforms.headingPitchRollQuaternion(coord, hpr),
+                model: {
+                    uri: resource,
+                    show: 'True',
+                    shadows: 'enabled',
+                    scale: 1.0
+                }
+            });
+        }
+    })
+});
+
+$(document).ready(function () {
+    $('input:radio[name="search_type"]').change(function () {
+        if ($(this).val() == 'Buildings') {
+            promise1.then(function (dataSource) {
+                viewer.dataSources.add(dataSource);
+                var entities = dataSource.entities.values;
+                var colorHash = {};
+                for (var i = 0; i < entities.length; i++) {
+                    var entity = entities[i];
+                    var id = entity.properties.id;
+                    var zone = entity.properties.zone;
+                    var height = entity.properties.heigth_m;
+                    var color = colorHash[id];
+                    if (zone == 'A') {
+                        color = Cesium.Color.fromAlpha(Cesium.Color.TRANSPARENT, 0.01);
+                    }
+                    else {
+                        color = Cesium.Color.WHITE;
+                    }
+                    entity.polygon.material = color;
+                    entity.polygon.outline = false;
+                    entity.polygon.extrudedHeight = height;
+                }
             })
-        );
-    }
-    else {
-        promise.then(function (dataSource) {
-            viewer.dataSources.remove(dataSource);
-        });
-        viewer.scene.primitives.remove(building);
-    }
-}
-Buildings();
 
-// แสดงการ classify ความสูงของอาคาร
-function Height() {
-    var checkBox = document.getElementById("Height");
-    var heightdetail = document.getElementById("heightdetail");
-    if (checkBox.checked == true) {
-        promise.then(function (dataSource) {
-            viewer.dataSources.add(dataSource);
-            var entities = dataSource.entities.values;
-            for (var i = 0; i < entities.length; i++) {
-                var entity = entities[i];
-                var height = entity.properties.heigth_m;
-                if (height <= 20) {
-                    color = Cesium.Color.BLUE;
+            building = viewer.scene.primitives.add(
+                new Cesium.Cesium3DTileset({
+                    url: Cesium.IonResource.fromAssetId(698805)
+                })
+            );
+            heightdetail.style.display = "none";
+            authodetail.style.display = "none";
+            zonedetail.style.display = "none";
+            promise2.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+            promise3.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+            promise4.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+        }
+        if ($(this).val() == 'Height') {
+            promise2.then(function (dataSource) {
+                viewer.dataSources.add(dataSource);
+                var entities = dataSource.entities.values;
+                for (var i = 0; i < entities.length; i++) {
+                    var entity = entities[i];
+                    var height = entity.properties.heigth_m;
+                    if (height <= 20) {
+                        color = Cesium.Color.BLUE;
+                    }
+                    else if (height <= 40) {
+                        color = Cesium.Color.GREEN;
+                    }
+                    else if (height <= 60) {
+                        color = Cesium.Color.YELLOW;
+                    }
+                    else if (height <= 80) {
+                        color = Cesium.Color.ORANGE;
+                    }
+                    else {
+                        color = Cesium.Color.RED;
+                    }
+                    entity.polygon.material = color;
+                    entity.polygon.outline = false;
+                    entity.polygon.extrudedHeight = height;
                 }
-                else if (height <= 40) {
-                    color = Cesium.Color.GREEN;
+            })
+            heightdetail.style.display = "block";
+            authodetail.style.display = "none";
+            zonedetail.style.display = "none";
+            promise1.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+            promise3.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+            promise4.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+            viewer.scene.primitives.remove(building);
+        }
+        if ($(this).val() == 'Autho') {
+            promise3.then(function (dataSource) {
+                viewer.dataSources.add(dataSource);
+                var entities = dataSource.entities.values;
+                for (var i = 0; i < entities.length; i++) {
+                    var entity = entities[i];
+                    var height = entity.properties.heigth_m;
+                    var autho = entity.properties.autho;
+                    if (autho == 'PMCU') {
+                        color = Cesium.Color.GOLD;
+                    }
+                    else if (autho == 'PRM') {
+                        color = Cesium.Color.HOTPINK;
+                    }
+                    else {
+                        color = Cesium.Color.GREENYELLOW;
+                    }
+                    entity.polygon.material = color;
+                    entity.polygon.outline = false;
+                    entity.polygon.extrudedHeight = height;
                 }
-                else if (height <= 60) {
-                    color = Cesium.Color.YELLOW;
+            })
+            authodetail.style.display = "block";
+            heightdetail.style.display = "none";
+            zonedetail.style.display = "none";
+            promise1.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+            promise2.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+            promise4.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+            viewer.scene.primitives.remove(building);
+        }
+        if ($(this).val() == 'Zone') {
+            promise4.then(function (dataSource) {
+                viewer.dataSources.add(dataSource);
+                var entities = dataSource.entities.values;
+                for (var i = 0; i < entities.length; i++) {
+                    var entity = entities[i];
+                    var height = entity.properties.heigth_m;
+                    var permit_area = entity.properties.permit_area;
+                    if (permit_area == 'สถานศึกษา') {
+                        color = Cesium.Color.SKYBLUE;
+                    }
+                    else if (permit_area == 'พาณิชย์') {
+                        color = Cesium.Color.MEDIUMPURPLE;
+                    }
+                    else {
+                        color = Cesium.Color.TOMATO;
+                    }
+                    entity.polygon.material = color;
+                    entity.polygon.outline = false;
+                    entity.polygon.extrudedHeight = height;
                 }
-                else if (height <= 80) {
-                    color = Cesium.Color.ORANGE;
-                }
-                else {
-                    color = Cesium.Color.RED;
-                }
-                entity.polygon.material = color;
-                entity.polygon.outline = false;
-                entity.polygon.extrudedHeight = height;
-            }
-        })
-        heightdetail.style.display = "block";
-    }
-    else {
-        promise.then(function (dataSource) {
-            viewer.dataSources.remove(dataSource);
-        });
-        heightdetail.style.display = "none";
-    }
-}
-
-// แสดงการ classify หน่วยงานของอาคาร
-function Autho() {
-    var checkBox = document.getElementById("Autho");
-    var authodetail = document.getElementById("authodetail");
-    if (checkBox.checked == true) {
-        promise.then(function (dataSource) {
-            viewer.dataSources.add(dataSource);
-            var entities = dataSource.entities.values;
-            for (var i = 0; i < entities.length; i++) {
-                var entity = entities[i];
-                var height = entity.properties.heigth_m;
-                var autho = entity.properties.autho;
-                if (autho == 'PMCU') {
-                    color = Cesium.Color.GOLD;
-                }
-                else if (autho == 'PRM') {
-                    color = Cesium.Color.HOTPINK;
-                }
-                else {
-                    color = Cesium.Color.GREENYELLOW;
-                }
-                entity.polygon.material = color;
-                entity.polygon.outline = false;
-                entity.polygon.extrudedHeight = height;
-            }
-        })
-        authodetail.style.display = "block";
-    }
-    else {
-        promise.then(function (dataSource) {
-            viewer.dataSources.remove(dataSource);
-        });
-        authodetail.style.display = "none";
-    }
-}
-
-function Zone() {
-    var checkBox = document.getElementById("Zone");
-    var zonedetail = document.getElementById("zonedetail");
-    if (checkBox.checked == true) {
-        promise.then(function (dataSource) {
-            viewer.dataSources.add(dataSource);
-            var entities = dataSource.entities.values;
-            for (var i = 0; i < entities.length; i++) {
-                var entity = entities[i];
-                var height = entity.properties.heigth_m;
-                var permit_area = entity.properties.permit_area;
-                if (permit_area == 'สถานศึกษา') {
-                    color = Cesium.Color.SKYBLUE;
-                }
-                else if (permit_area == 'พาณิชย์') {
-                    color = Cesium.Color.MEDIUMPURPLE;
-                }
-                else {
-                    color = Cesium.Color.TOMATO;
-                }
-                entity.polygon.material = color;
-                entity.polygon.outline = false;
-                entity.polygon.extrudedHeight = height;
-            }
-        })
-        zonedetail.style.display = "block";
-    }
-    else {
-        promise.then(function (dataSource) {
-            viewer.dataSources.remove(dataSource);
-        });
-        zonedetail.style.display = "none";
-    }
-}
+            })
+            zonedetail.style.display = "block";
+            heightdetail.style.display = "none";
+            authodetail.style.display = "none";
+            promise1.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+            promise2.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+            promise3.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+        }
+    });
+});
 
 // นำเข้า logo pin ของแต่ละข้อมูลเพื่อแสดงผล
 var pinBuilder = new Cesium.PinBuilder();
@@ -904,60 +956,3 @@ function pieChart3() {
     }
 }
 
-function fire_hydrant() {
-    var checkBox = document.getElementById("fire_hydrant");
-    if (checkBox.checked == true) {
-        var fire_hydrant = Cesium.IonResource.fromAssetId(164759).then(function (resource) {
-            $.getJSON('SampleData/geojson/fire_hydrant.geojson', function (data) {
-                for (let i = 0; i < data.features.length; i++) {
-                    let coordinates = data.features[i].geometry.coordinates
-                    //console.log( data.features[i].properties.heading )
-                    let coord = Cesium.Cartesian3.fromDegrees(coordinates[0], coordinates[1], 0.0);
-                    let hpr = new Cesium.HeadingPitchRoll(Cesium.Math.toRadians(data.features[i].properties.heading + 90), 0, 0);
-                    viewer.entities.add({
-                        position: coord,
-                        orientation: Cesium.Transforms.headingPitchRollQuaternion(coord, hpr),
-                        model: {
-                            uri: resource,
-                            show: 'True',
-                            shadows: 'enabled',
-                            scale: 1.5
-                        }
-                    });
-                }
-            })
-        });
-    }
-    else {
-        viewer.entities.removeAll();
-    }
-}
-
-function electric_pole() {
-    var checkBox = document.getElementById("electric_pole");
-    if (checkBox.checked == true) {
-        var electric_pole = Cesium.IonResource.fromAssetId(167335).then(function (resource) {
-            $.getJSON('SampleData/geojson/electric_pole_point.geojson', function (data) {
-                for (let i = 0; i < data.features.length; i++) {
-                    let coordinates = data.features[i].geometry.coordinates
-                    //console.log( data.features[i].properties.heading )
-                    let coord = Cesium.Cartesian3.fromDegrees(coordinates[0], coordinates[1], 0.0);
-                    let hpr = new Cesium.HeadingPitchRoll(Cesium.Math.toRadians(data.features[i].properties.heading + 90), 0, 0);
-                    viewer.entities.add({
-                        position: coord,
-                        orientation: Cesium.Transforms.headingPitchRollQuaternion(coord, hpr),
-                        model: {
-                            uri: resource,
-                            show: 'True',
-                            shadows: 'enabled',
-                            scale: 1.0
-                        }
-                    });
-                }
-            })
-        });
-    }
-    else {
-        viewer.entities.removeAll();
-    }
-}
