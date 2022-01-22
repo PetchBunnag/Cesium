@@ -247,6 +247,7 @@ billboards.add({
     horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
     verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
 });
+
 billboards.add({
     image: 'assets/image/LOGO_legend/ICON_CCTV_map_pin.svg',
     scale: 0.25,
@@ -955,4 +956,3 @@ function pieChart3() {
         pieChart.style.display = "none";
     }
 }
-
