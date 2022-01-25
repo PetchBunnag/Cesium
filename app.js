@@ -453,7 +453,7 @@ for (var i = 0; i < pm_value.length; i++) {
 }
 
 let valueMin = 0;
-let valueMax = 51;
+let valueMax = 60;
 
 // นำเข้า logo pin pm 2.5 แต่ละสี และกำหนดตัวแปรที่จะแสดงผลที่แต่ละจุด
 const location_gray = 'assets/svg/location-gray.svg'
