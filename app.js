@@ -422,10 +422,10 @@ avgcolor();
 
 pm = Cesium.GeoJsonDataSource.load("SampleData/geojson/pm_data.geojson");
 let bounds = {
-    west: 100.5206268,
+    west: 100.5232007,
     east: 100.5364466,
     south: 13.7329829,
-    north: 13.74409429,
+    north: 13.74339258,
 };
 
 // init heatmap
