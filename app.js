@@ -370,35 +370,18 @@ for (var i in json_obj.data) {
     sensor_name.push(sensor);
 }
 
-// console.log(pm_value);
-
-let order = [33, 5, 20, 27, 7, 31, 3, 4, 34, 15, 2, 14, 24, 17, 42, 9, 48, 18, 29, 16, 8, 22, 19, 43, 6, 10, 13, 28, 12, 1]
-var value_order = [];
-var name_order = [];
-order.forEach(i => value_order.push(pm_value[i]));
-order.forEach(i => name_order.push(sensor_name[i]));
-
-// console.log(value_order);
-// console.log(name_order);
-
-var float_value_order = [];
-var notnull_name_order = [];
-for (var i in value_order) {
-    let float_pm = value_order[i];
-    let notnull_name = name_order[i];
-    if (isNaN(float_pm)) {
-    }
+var notnull_value = [];
+var notnull_name = [];
+for (var i in pm_value) {
+    if (isNaN(pm_value[i])) { }
     else {
-        float_value_order.push(float_pm);
-        notnull_name_order.push(notnull_name);
+        notnull_value.push(pm_value[i]);
+        notnull_name.push(sensor_name[i]);
     }
 }
 
-// console.log(float_value_order);
-// console.log(notnull_name_order);
-
 // คำนวณค่าเฉลี่ย pm 2.5
-let avg = float_value_order.reduce((acc, n) => acc + n) / float_value_order.length
+let avg = notnull_value.reduce((acc, n) => acc + n) / notnull_value.length
 
 document.getElementById("avg").innerHTML = avg.toFixed(3);
 
@@ -438,12 +421,11 @@ var avgcolor = function () {
 avgcolor();
 
 pm = Cesium.GeoJsonDataSource.load("SampleData/geojson/pm_data.geojson");
-
 let bounds = {
-    west: 100.5214395,
-    east: 100.5384419,
-    south: 13.732283788,
-    north: 13.7472399,
+    west: 100.5206268,
+    east: 100.5364466,
+    south: 13.7329829,
+    north: 13.74409429,
 };
 
 // init heatmap
@@ -456,72 +438,17 @@ let heatMap = CesiumHeatmap.create(
     }
 );
 
-const x = [
-    100.52827082672026,
-    100.530735495,
-    100.53336099529372,
-    100.53362132126873,
-    100.52897664922266,
-    100.5284448830326,
-    100.52588761057089,
-    100.52607772349693,
-    100.52562212138446,
-    100.5300350645523,
-    100.53118969990342,
-    100.52616823237871,
-    100.5286910343361,
-    100.52703400403058,
-    100.53281971020373,
-    100.52671494523415,
-    100.52701860241476,
-    100.53394516877444,
-    100.53251041021073,
-    100.53158436137483,
-    100.53273926491897,
-    100.53499334013432,
-    100.5341594851453,
-    100.53329814373315,
-    100.53644656463388,
-    100.52949799535911,
-    100.52525116850217,
-    100.53399404795518,
-    100.53052842650057
-]
-const y = [
-    13.73437807782637,
-    13.744031875,
-    13.742478828746677,
-    13.734059158066245,
-    13.738528542783136,
-    13.738921753681495,
-    13.735983793168788,
-    13.741653209543246,
-    13.744094289184645,
-    13.734078441238907,
-    13.73984616064568,
-    13.74106230509176,
-    13.737779598190468,
-    13.740753337701406,
-    13.73571061680461,
-    13.737808937330932,
-    13.74212954226,
-    13.736336927303764,
-    13.734159929929644,
-    13.734335392970877,
-    13.742677621881011,
-    13.743392578426702,
-    13.742488536798245,
-    13.73471079449726,
-    13.733036368027712,
-    13.733937403248515,
-    13.737400789545548,
-    13.739344281202982,
-    13.735987139477658
-]
+var pm_geojson = JSON.parse(Get('SampleData/geojson/pm_data.geojson'));
+const x = new Array();
+const y = new Array();
+for (var i = 0; i < pm_geojson.features.length; i++) {
+    x.push(pm_geojson.features[i].properties.x)
+    y.push(pm_geojson.features[i].properties.y)
+}
 
 let data = [];
-for (var i = 0; i < value_order.length; i++) {
-    var data_value = { x: x[i], y: y[i], value: value_order[i] };
+for (var i = 0; i < pm_value.length; i++) {
+    var data_value = { x: x[i], y: y[i], value: pm_value[i] };
     data.push(data_value);
 }
 
@@ -557,10 +484,9 @@ function PM() {
             var entities = dataSource.entities.values;
             for (var i = 0; i < entities.length; i++) {
                 var entity = entities[i];
-                entity.description = '<span style="font-weight: bold;"> PM 2.5: </span>' + value_order[i].toFixed(3) + ' µg/m<sup>3</sup>'
                 entity.billboard = billboards.get(3);
-                for (j in value_order) {
-                    if (isNaN(value_order[j])) {
+                for (j in pm_value) {
+                    if (isNaN(pm_value[j])) {
                         viewer.entities.add({
                             position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
                             billboard: {
@@ -581,7 +507,7 @@ function PM() {
                             },
                         });
                     }
-                    else if (value_order[j] <= 25) {
+                    else if (pm_value[j] <= 25) {
                         viewer.entities.add({
                             position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
                             billboard: {
@@ -590,7 +516,7 @@ function PM() {
                                 verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                             },
                             label: {
-                                text: textName + Math.round(value_order[j]),
+                                text: textName + Math.round(pm_value[j]),
                                 font,
                                 backgroundColor,
                                 showBackground,
@@ -602,7 +528,7 @@ function PM() {
                             },
                         });
                     }
-                    else if (value_order[j] <= 50) {
+                    else if (pm_value[j] <= 50) {
                         viewer.entities.add({
                             position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
                             billboard: {
@@ -611,7 +537,7 @@ function PM() {
                                 verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                             },
                             label: {
-                                text: textName + Math.round(value_order[j]),
+                                text: textName + Math.round(pm_value[j]),
                                 font,
                                 backgroundColor,
                                 showBackground,
@@ -623,7 +549,7 @@ function PM() {
                             },
                         });
                     }
-                    else if (value_order[j] <= 100) {
+                    else if (pm_value[j] <= 100) {
                         viewer.entities.add({
                             position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
                             billboard: {
@@ -632,7 +558,7 @@ function PM() {
                                 verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                             },
                             label: {
-                                text: textName + Math.round(value_order[j]),
+                                text: textName + Math.round(pm_value[j]),
                                 font,
                                 backgroundColor,
                                 showBackground,
@@ -644,7 +570,7 @@ function PM() {
                             },
                         });
                     }
-                    else if (value_order[j] <= 200) {
+                    else if (pm_value[j] <= 200) {
                         viewer.entities.add({
                             position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
                             billboard: {
@@ -653,7 +579,7 @@ function PM() {
                                 verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                             },
                             label: {
-                                text: textName + Math.round(value_order[j]),
+                                text: textName + Math.round(pm_value[j]),
                                 font,
                                 backgroundColor,
                                 showBackground,
@@ -665,7 +591,7 @@ function PM() {
                             },
                         });
                     }
-                    else if (value_order[j] > 200) {
+                    else if (pm_value[j] > 200) {
                         viewer.entities.add({
                             position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
                             billboard: {
@@ -674,7 +600,7 @@ function PM() {
                                 verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                             },
                             label: {
-                                text: textName + Math.round(value_order[j]),
+                                text: textName + Math.round(pm_value[j]),
                                 font,
                                 backgroundColor,
                                 showBackground,
@@ -717,8 +643,8 @@ function PM() {
 // // console.log(power_value);
 
 // // กำหนดค่าที่จะแสดงผลในแกน x, y ของ bar chart และสีของ bar chart
-var xValues = notnull_name_order;
-var yValues = float_value_order;
+var xValues = notnull_name;
+var yValues = notnull_value;
 var barColors = "#de5b8d";
 
 // map ค่าในแกน x และ y เข้าด้วยกัน
