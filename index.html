@@ -155,7 +155,7 @@
 
         .dashboard:hover,
         nav.dashboard.expanded {
-            width: 400px;
+            width: 450px;
             overflow: visible;
         }
 
@@ -188,7 +188,7 @@
         .dashboard li {
             position: relative;
             display: block;
-            width: 400px;
+            width: 450px;
         }
 
         .main-menu li>a,
@@ -684,7 +684,7 @@
             <li>
                 <a style="width: 100%; background: transparent; margin-top: 90px;">
                     <i class="fa" style="font-style: normal; font-size: 16px;">
-                        <div style="float: right; margin-right: 20px;">
+                        <div style="float: right; margin-right: 70px;">
                             <span id="image"></span>
                             ค่า PM 2.5 เฉลี่ย:
                             <span id="avg" style="font-size: 36px; font-weight: bold;"></span>
@@ -707,8 +707,15 @@
                     </label>
 
                 </a>
-                <div id="barchart">
+                <!-- <div id="barchart">
                     <canvas id="myBarChart" style="width: 100%; height: 300px;"></canvas>
+                </div> -->
+                <div id="barchart"
+                    style="border: none; border-radius: 25px; overflow: hidden; margin: 15px auto; max-width: 430px; height: 280px;">
+                    <iframe scrolling="no"
+                        src="http://env.cusmart.chula.ac.th/#/home/trending-analytic"
+                        style="border: 0px none; margin-left: -480px; height: 860px; margin-top: -430px; width: 926px;">
+                    </iframe>
                 </div>
             </li>
             <!-- <li>

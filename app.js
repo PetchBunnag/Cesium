@@ -452,8 +452,8 @@ for (var i = 0; i < pm_value.length; i++) {
     data.push(data_value);
 }
 
-let valueMin = 0;
-let valueMax = 60;
+let valueMin = Math.min.apply(Math, notnull_value);
+let valueMax = Math.max.apply(Math, notnull_value);
 
 // นำเข้า logo pin pm 2.5 แต่ละสี และกำหนดตัวแปรที่จะแสดงผลที่แต่ละจุด
 const location_gray = 'assets/svg/location-gray.svg'
@@ -476,7 +476,6 @@ const pixelOffset = new Cesium.Cartesian2(0, -35)
 // แสดง heatmap ของ pm 2.5
 function PM() {
     var checkBox = document.getElementById("PM2.5");
-    var pmdetail = document.getElementById("pm2.5detail");
     if (checkBox.checked == true) {
         heatMap.setWGS84Data(valueMin, valueMax, data);
         pm.then(function (dataSource) {
@@ -620,7 +619,6 @@ function PM() {
         pm.then(function (dataSource) {
             viewer.dataSources.remove(dataSource);
             viewer.entities.removeAll();
-            pmdetail.style.display = "none";
         })
     }
 }
