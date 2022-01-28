@@ -619,6 +619,7 @@ function PM() {
         pm.then(function (dataSource) {
             viewer.dataSources.remove(dataSource);
             viewer.entities.removeAll();
+            // heatMap.removeLayer();
         })
     }
 }
