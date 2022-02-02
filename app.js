@@ -88,16 +88,8 @@ $(document).ready(function () {
                 var colorHash = {};
                 for (var i = 0; i < entities.length; i++) {
                     var entity = entities[i];
-                    var id = entity.properties.id;
-                    var zone = entity.properties.zone;
                     var height = entity.properties.heigth_m;
-                    var color = colorHash[id];
-                    if (zone == 'A') {
-                        color = Cesium.Color.fromAlpha(Cesium.Color.TRANSPARENT, 0.01);
-                    }
-                    else {
-                        color = Cesium.Color.WHITE;
-                    }
+                    color = Cesium.Color.fromAlpha(Cesium.Color.TRANSPARENT, 0.01);
                     entity.polygon.material = color;
                     entity.polygon.outline = false;
                     entity.polygon.extrudedHeight = height;
@@ -106,9 +98,10 @@ $(document).ready(function () {
 
             building = viewer.scene.primitives.add(
                 new Cesium.Cesium3DTileset({
-                    url: Cesium.IonResource.fromAssetId(698805)
+                    url: Cesium.IonResource.fromAssetId(800167)
                 })
             );
+
             heightdetail.style.display = "none";
             authodetail.style.display = "none";
             zonedetail.style.display = "none";
@@ -624,7 +617,7 @@ function PM() {
     }
 }
 
-// let bld_name = [];
+// let bld = [];
 // let power_value = [];
 // for (var i = 4; i < 248; i++) {
 //     if (i == 5 || i == 8 || i == 12 || i == 23 || i == 34 || i == 61 || i == 69 || i == 73 || i == 74 || i == 75 || i == 76 || i == 80 ||
@@ -634,12 +627,26 @@ function PM() {
 //     var json_obj_1 = JSON.parse(Get(url));
 //     let name = `${json_obj_1.data['name']}`
 //     let power = `${json_obj_1.data['power']}`
-//     bld_name.push(name);
+//     bld.push(name);
 //     power_value.push(parseFloat(power));
 // }
 
-// // console.log(bld_name);
-// // console.log(power_value);
+// console.log(bld);
+// console.log(power_value);
+
+// var pw_polygon = Cesium.GeoJsonDataSource.load('SampleData/geojson/polygon_bldg_power.geojson')
+// pw_polygon.then(function (dataSource) {
+//     viewer.dataSources.add(dataSource);
+//     var entities = dataSource.entities.values;
+//     for (var i = 0; i < entities.length; i++) {
+//         var entity = entities[i];
+//         var height = entity.properties.heigth_m;
+//         color = Cesium.Color.RED;
+//         entity.polygon.material = color;
+//         entity.polygon.outline = false;
+//         entity.polygon.extrudedHeight = height;
+//     }
+// })
 
 // // กำหนดค่าที่จะแสดงผลในแกน x, y ของ bar chart และสีของ bar chart
 var xValues = notnull_name;
