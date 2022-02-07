@@ -25,15 +25,80 @@ scene.camera.setView({
     endTransform: Cesium.Matrix4.IDENTITY,
 });
 
+let bld = [];
+let power_value = [];
+for (var i = 4; i < 248; i++) {
+    if (
+        i == 227 || i == 210 || i == 214 || i == 222 || i == 219 || i == 155 || i == 95 || i == 228 || i == 123 || i == 58 || i == 96 ||
+        i == 216 || i == 215 || i == 211 || i == 217 || i == 184 || i == 60 || i == 46 || i == 221 || i == 223 || i == 226 || i == 220 ||
+        i == 29 || i == 170 || i == 30 || i == 171 || i == 180 || i == 91 || i == 154 || i == 86 || i == 87 || i == 174 || i == 175 ||
+        i == 178 || i == 152 || i == 201 || i == 116 || i == 59 || i == 234 || i == 93 || i == 205 || i == 79 || i == 209 || i == 229 ||
+        i == 230 || i == 67 || i == 232 || i == 159 || i == 68 || i == 84 || i == 213 || i == 145 || i == 197 || i == 207 || i == 206 ||
+        i == 194 || i == 160 || i == 195 || i == 196 || i == 161 || i == 203 || i == 54 || i == 142 || i == 43 || i == 158 || i == 112 ||
+        i == 162 || i == 153 || i == 6 || i == 33 || i == 165 || i == 163 || i == 7 || i == 45 || i == 117 || i == 190 || i == 113 ||
+        i == 166 || i == 106 || i == 32 || i == 13 || i == 204 || i == 63 || i == 64 || i == 77 || i == 187 || i == 27 || i == 44 ||
+        i == 49 || i == 47 || i == 124 || i == 51 || i == 50 || i == 52 || i == 15 || i == 173 || i == 78 || i == 176 || i == 10 ||
+        i == 185 || i == 186 || i == 72 || i == 139 || i == 177 || i == 114 || i == 53 || i == 56 || i == 167 || i == 82 || i == 16 ||
+        i == 151 || i == 198 || i == 181 || i == 25 || i == 26 || i == 28 || i == 183 || i == 182 || i == 107 || i == 122 || i == 92 ||
+        i == 9 || i == 119 || i == 208 || i == 65 || i == 40 || i == 17 || i == 121 || i == 36 || i == 37 || i == 57 || i == 18 ||
+        i == 105 || i == 19 || i == 22 || i == 20 || i == 48 || i == 100 || i == 101 || i == 102 || i == 110 || i == 21 || i == 148 ||
+        i == 237 || i == 109 || i == 11 || i == 41 || i == 169 || i == 168 || i == 83 || i == 90 || i == 88 || i == 55 || i == 188 ||
+        i == 225 || i == 39 || i == 199 || i == 233 || i == 231 || i == 99 || i == 70 || i == 108 || i == 200 || i == 224 || i == 193 ||
+        i == 150 || i == 120 || i == 38
+    ) {
+        var url = 'http://94.74.116.125:9000/api/v1/node/' + i + '/usage_profile/day/power';
+        var json_obj_1 = JSON.parse(Get(url));
+        let name = `${json_obj_1.data['name']}`
+        let power = `${json_obj_1.data['power']}`
+        bld.push(name);
+        power_value.push(parseFloat(power));
+    }
+}
+
+// console.log(bld);
+// console.log(power_value);
+
+let order = [
+    159, 144, 147, 154, 151, 98, 66, 160, 87, 43, 67, 149, 148, 145, 150, 122, 45, 31, 153, 155, 158, 152, 18, 110, 19, 111, 118, 63, 97,
+    59, 113, 114, 117, 95, 136, 81, 44, 166, 65, 139, 55, 143, 161, 162, 49, 164, 100, 50, 58, 146, 91, 132, 141, 140, 129, 101, 130, 131,
+    102, 137, 39, 90, 28, 99, 78, 103, 96, 0, 21, 105, 104, 1, 30, 82, 127, 79, 106, 73, 20, 5, 138, 46, 47, 53, 125, 16, 60, 29, 34, 32,
+    88, 36, 35, 37, 6, 112, 54, 115, 3, 123, 124, 52, 89, 116, 80, 38, 41, 107, 56, 7, 94, 133, 119, 14, 15, 17, 121, 120, 74, 86, 64, 2,
+    83, 142, 48, 26, 8, 85, 22, 23, 42, 9, 72, 10, 13, 11, 33, 69, 70, 71, 77, 12, 92, 167, 76, 4, 27, 109, 108, 57, 62, 61, 40, 126, 157,
+    25, 134, 165, 163, 68, 51, 75, 135, 156, 128, 93, 84, 24
+];
+
+var name_order = [];
+var power_order = [];
+order.forEach(i => name_order.push(bld[i]));
+order.forEach(i => power_order.push(power_value[i]));
+
+console.log(name_order);
+console.log(power_order);
+
+var building_list = [];
+var power_list = []
+var power_json = JSON.parse(Get('SampleData/geojson/polygon_bldg_power.geojson'));
+for (var i = 0; i < power_json.features.length; i++) {
+    building_list.push(power_json.features[i].properties.bld_name);
+    power_json.features[i].properties.power += power_order[i];
+    power_list.push(power_json.features[i].properties.power)
+}
+
+console.log(building_list);
+console.log(power_list);
+console.log(power_json);
+
 var promise1 = Cesium.GeoJsonDataSource.load("SampleData/geojson/polygon_bldg_buff.geojson");
 var promise2 = Cesium.GeoJsonDataSource.load("SampleData/geojson/polygon_bldg_buff.geojson");
 var promise3 = Cesium.GeoJsonDataSource.load("SampleData/geojson/polygon_bldg_buff.geojson");
 var promise4 = Cesium.GeoJsonDataSource.load("SampleData/geojson/polygon_bldg_buff.geojson");
+var pw_polygon = Cesium.GeoJsonDataSource.load(power_json);
 var electric_pole = Cesium.IonResource.fromAssetId(167335);
 var fire_hydrant = Cesium.IonResource.fromAssetId(164759);
 var heightdetail = document.getElementById("heightdetail");
 var authodetail = document.getElementById("authodetail");
 var zonedetail = document.getElementById("zonedetail");
+var powerdetail = document.getElementById("powerdetail");
 var fire_hydrant = Cesium.IonResource.fromAssetId(164759)
 var electric_pole = Cesium.IonResource.fromAssetId(167335)
 
@@ -105,6 +170,7 @@ $(document).ready(function () {
             heightdetail.style.display = "none";
             authodetail.style.display = "none";
             zonedetail.style.display = "none";
+            powerdetail.style.display = "none";
             promise2.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
@@ -112,6 +178,9 @@ $(document).ready(function () {
                 viewer.dataSources.remove(dataSource);
             });
             promise4.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+            pw_polygon.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
         }
@@ -145,6 +214,7 @@ $(document).ready(function () {
             heightdetail.style.display = "block";
             authodetail.style.display = "none";
             zonedetail.style.display = "none";
+            powerdetail.style.display = "none";
             promise1.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
@@ -152,6 +222,9 @@ $(document).ready(function () {
                 viewer.dataSources.remove(dataSource);
             });
             promise4.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+            pw_polygon.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
             viewer.scene.primitives.remove(building);
@@ -181,6 +254,7 @@ $(document).ready(function () {
             authodetail.style.display = "block";
             heightdetail.style.display = "none";
             zonedetail.style.display = "none";
+            powerdetail.style.display = "none";
             promise1.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
@@ -188,6 +262,9 @@ $(document).ready(function () {
                 viewer.dataSources.remove(dataSource);
             });
             promise4.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+            pw_polygon.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
             viewer.scene.primitives.remove(building);
@@ -217,6 +294,7 @@ $(document).ready(function () {
             zonedetail.style.display = "block";
             heightdetail.style.display = "none";
             authodetail.style.display = "none";
+            powerdetail.style.display = "none";
             promise1.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
@@ -226,6 +304,56 @@ $(document).ready(function () {
             promise3.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
+            pw_polygon.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+            viewer.scene.primitives.remove(building);
+        }
+        if ($(this).val() == 'power') {
+            pw_polygon.then(function (dataSource) {
+                viewer.dataSources.add(dataSource);
+                var entities = dataSource.entities.values;
+                for (var i = 0; i < entities.length; i++) {
+                    var entity = entities[i];
+                    var height = entity.properties.heigth_m;
+                    var power = entity.properties.power;
+                    if (power <= 0) {
+                        color = Cesium.Color.BLUE;
+                    }
+                    else if (power <= 100) {
+                        color = Cesium.Color.GREEN;
+                    }
+                    else if (power <= 200) {
+                        color = Cesium.Color.YELLOW;
+                    }
+                    else if (power <= 300) {
+                        color = Cesium.Color.ORANGE;
+                    }
+                    else {
+                        color = Cesium.Color.RED;
+                    }
+                    entity.polygon.material = color;
+                    entity.polygon.outline = false;
+                    entity.polygon.extrudedHeight = height;
+                }
+            })
+            powerdetail.style.display = "block";
+            zonedetail.style.display = "none";
+            heightdetail.style.display = "none";
+            authodetail.style.display = "none";
+            promise1.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+            promise2.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+            promise3.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+            promise4.then(function (dataSource) {
+                viewer.dataSources.remove(dataSource);
+            });
+            viewer.scene.primitives.remove(building);
         }
     });
 });
@@ -616,37 +744,6 @@ function PM() {
         })
     }
 }
-
-// let bld = [];
-// let power_value = [];
-// for (var i = 4; i < 248; i++) {
-//     if (i == 5 || i == 8 || i == 12 || i == 23 || i == 34 || i == 61 || i == 69 || i == 73 || i == 74 || i == 75 || i == 76 || i == 80 ||
-//         i == 103 || i == 132 || i == 133 || i == 134 || i == 135 || i == 143 || i == 146 || i == 164 ||
-//         i == 238 || i == 239 || i == 240 || i == 241 || i == 242) { continue; }
-//     var url = 'http://94.74.116.125:9000/api/v1/node/' + i + '/usage_profile/day/power';
-//     var json_obj_1 = JSON.parse(Get(url));
-//     let name = `${json_obj_1.data['name']}`
-//     let power = `${json_obj_1.data['power']}`
-//     bld.push(name);
-//     power_value.push(parseFloat(power));
-// }
-
-// console.log(bld);
-// console.log(power_value);
-
-// var pw_polygon = Cesium.GeoJsonDataSource.load('SampleData/geojson/polygon_bldg_power.geojson')
-// pw_polygon.then(function (dataSource) {
-//     viewer.dataSources.add(dataSource);
-//     var entities = dataSource.entities.values;
-//     for (var i = 0; i < entities.length; i++) {
-//         var entity = entities[i];
-//         var height = entity.properties.heigth_m;
-//         color = Cesium.Color.RED;
-//         entity.polygon.material = color;
-//         entity.polygon.outline = false;
-//         entity.polygon.extrudedHeight = height;
-//     }
-// })
 
 // // กำหนดค่าที่จะแสดงผลในแกน x, y ของ bar chart และสีของ bar chart
 var xValues = notnull_name;
