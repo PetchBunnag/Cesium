@@ -150,7 +150,6 @@ $(document).ready(function () {
             promise1.then(function (dataSource) {
                 viewer.dataSources.add(dataSource);
                 var entities = dataSource.entities.values;
-                var colorHash = {};
                 for (var i = 0; i < entities.length; i++) {
                     var entity = entities[i];
                     var height = entity.properties.heigth_m;
@@ -180,7 +179,7 @@ $(document).ready(function () {
             promise4.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
-            pw_polygon.then(function (dataSource) {
+            en_polygon.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
         }
@@ -224,7 +223,7 @@ $(document).ready(function () {
             promise4.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
-            pw_polygon.then(function (dataSource) {
+            en_polygon.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
             viewer.scene.primitives.remove(building);
@@ -264,7 +263,7 @@ $(document).ready(function () {
             promise4.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
-            pw_polygon.then(function (dataSource) {
+            en_polygon.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
             viewer.scene.primitives.remove(building);
@@ -304,13 +303,13 @@ $(document).ready(function () {
             promise3.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
-            pw_polygon.then(function (dataSource) {
+            en_polygon.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
             viewer.scene.primitives.remove(building);
         }
         if ($(this).val() == 'energy') {
-            pw_polygon.then(function (dataSource) {
+            en_polygon.then(function (dataSource) {
                 viewer.dataSources.add(dataSource);
                 var entities = dataSource.entities.values;
                 for (var i = 0; i < entities.length; i++) {
