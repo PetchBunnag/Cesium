@@ -593,7 +593,6 @@ const outlineWidth = 2
 const style = Cesium.LabelStyle.FILL_AND_OUTLINE
 const pixelOffset = new Cesium.Cartesian2(0, -35)
 
-
 // แสดง heatmap ของ pm 2.5
 function PM() {
     var checkBox = document.getElementById("PM2.5");
