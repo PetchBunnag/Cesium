@@ -933,3 +933,57 @@ function pieChart3() {
         pieChart.style.display = "none";
     }
 }
+
+// แสดง pie chart การใช้พลังงานไฟฟ้า
+function pieChart4() {
+    var checkBox = document.getElementById("pie4");
+    var pieChart = document.getElementById("piechart4");
+    if (checkBox.checked == true) {
+        pieChart.style.display = "block";
+        var xValues = ["น้อยกว่า 0 จูล", "0 - 250 จูล", "251 - 500 จูล", "501 - 750 จูล", "751 - 1000 จูล", "1001 - 1250 จูล", "1251 - 1500 จูล", "มากกว่า 1500 จูล"];
+        var yValues = [
+            energy_order.filter(x => x < 2).length,
+            energy_order.filter(x => x <= 250).length,
+            energy_order.filter(x => x <= 500).length,
+            energy_order.filter(x => x <= 750).length,
+            energy_order.filter(x => x <= 1000).length,
+            energy_order.filter(x => x <= 1250).length,
+            energy_order.filter(x => x <= 1500).length,
+            energy_order.filter(x => x > 1500).length
+        ];
+        var barColors = [
+            "#3288bd",
+            "#66c2a5",
+            "#abdda4",
+            "#e6f598",
+            "#fee08b",
+            "#fdae61",
+            "#f46d43",
+            "#d53e4f"
+        ];
+
+        var piechartData = {
+            labels: xValues,
+            datasets: [{
+                backgroundColor: barColors,
+                borderWidth: 1,
+                data: yValues,
+            }]
+        };
+
+        var piechartconfig = {
+            type: "pie",
+            data: piechartData,
+            options: {
+                maintainAspectRatio: false,
+                title: {
+                    display: true,
+                    text: 'การใช้พลังงานไฟฟ้า'
+                }
+            }
+        }
+        new Chart("myPieChart4", piechartconfig);
+    } else {
+        pieChart.style.display = "none";
+    }
+}

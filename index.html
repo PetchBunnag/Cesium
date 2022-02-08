@@ -131,7 +131,8 @@
         #barchart2,
         #piechart,
         #piechart2,
-        #piechart3 {
+        #piechart3,
+        #piechart4 {
             display: none;
             background: transparent;
             margin-left: 50px;
@@ -871,6 +872,22 @@
                 </a>
                 <div id="piechart3">
                     <canvas id="myPieChart3" style="width: 100%;"></canvas>
+                </div>
+            </li>
+            <li>
+                <a>
+                    <i class="fa" style="float: right;">
+                    </i>
+                    <span class="nav-text" style="left: 50px;">
+                        การใช้พลังงานไฟฟ้า
+                    </span>
+                    <label class="switch">
+                        <input type="checkbox" id="pie4" onchange="pieChart4()">
+                        <span class="slider round" style="top: -10px; margin-bottom: 10px;"></span>
+                    </label>
+                </a>
+                <div id="piechart4">
+                    <canvas id="myPieChart4" style="width: 100%;"></canvas>
                 </div>
             </li>
             <li>
