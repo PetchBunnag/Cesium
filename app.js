@@ -277,13 +277,13 @@ $(document).ready(function () {
                     var height = entity.properties.heigth_m;
                     var permit_area = entity.properties.permit_area;
                     if (permit_area == 'สถานศึกษา') {
-                        color = Cesium.Color.fromCssColorString('#e66101');
+                        color = Cesium.Color.fromCssColorString('#e60049');
                     }
                     else if (permit_area == 'พาณิชย์') {
-                        color = Cesium.Color.fromCssColorString('#5e3c99');
+                        color = Cesium.Color.fromCssColorString('#0bb4ff');
                     }
                     else {
-                        color = Cesium.Color.fromCssColorString('#f7f7f7');
+                        color = Cesium.Color.fromCssColorString('#50e991');
                     }
                     entity.polygon.material = color;
                     entity.polygon.outline = false;
