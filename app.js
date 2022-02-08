@@ -26,7 +26,7 @@ scene.camera.setView({
 });
 
 let bld = [];
-let power_value = [];
+let energy_value = [];
 for (var i = 4; i < 248; i++) {
     if (
         i == 227 || i == 210 || i == 214 || i == 222 || i == 219 || i == 155 || i == 95 || i == 228 || i == 123 || i == 58 || i == 96 ||
@@ -46,17 +46,17 @@ for (var i = 4; i < 248; i++) {
         i == 225 || i == 39 || i == 199 || i == 233 || i == 231 || i == 99 || i == 70 || i == 108 || i == 200 || i == 224 || i == 193 ||
         i == 150 || i == 120 || i == 38
     ) {
-        var url = 'http://94.74.116.125:9000/api/v1/node/' + i + '/usage_profile/day/power';
-        var json_obj_1 = JSON.parse(Get(url));
-        let name = `${json_obj_1.data['name']}`
-        let power = `${json_obj_1.data['power']}`
+        var url = 'http://94.74.116.125:9000/api/v1/node/' + i + '/usage_profile/day/energy';
+        var json_obj = JSON.parse(Get(url));
+        let name = `${json_obj.data['name']}`
+        let energy = `${json_obj.data['energy']}`
         bld.push(name);
-        power_value.push(parseFloat(power));
+        energy_value.push(parseFloat(energy));
     }
 }
 
 // console.log(bld);
-// console.log(power_value);
+// console.log(energy_value);
 
 let order = [
     159, 144, 147, 154, 151, 98, 66, 160, 87, 43, 67, 149, 148, 145, 150, 122, 45, 31, 153, 155, 158, 152, 18, 110, 19, 111, 118, 63, 97,
@@ -68,37 +68,37 @@ let order = [
 ];
 
 var name_order = [];
-var power_order = [];
+var energy_order = [];
 order.forEach(i => name_order.push(bld[i]));
-order.forEach(i => power_order.push(power_value[i]));
+order.forEach(i => energy_order.push(energy_value[i]));
 
 console.log(name_order);
-console.log(power_order);
+console.log(energy_order);
 
 var building_list = [];
-var power_list = []
-var power_json = JSON.parse(Get('SampleData/geojson/polygon_bldg_power.geojson'));
-for (var i = 0; i < power_json.features.length; i++) {
-    building_list.push(power_json.features[i].properties.bld_name);
-    power_json.features[i].properties.power += power_order[i];
-    power_list.push(power_json.features[i].properties.power)
+var energy_list = []
+var energy_json = JSON.parse(Get('SampleData/geojson/polygon_bldg_energy.geojson'));
+for (var i = 0; i < energy_json.features.length; i++) {
+    building_list.push(energy_json.features[i].properties.bld_name);
+    energy_json.features[i].properties.energy += energy_order[i];
+    energy_list.push(energy_json.features[i].properties.energy)
 }
 
 console.log(building_list);
-console.log(power_list);
-console.log(power_json);
+console.log(energy_list);
+console.log(energy_json);
 
 var promise1 = Cesium.GeoJsonDataSource.load("SampleData/geojson/polygon_bldg_buff.geojson");
 var promise2 = Cesium.GeoJsonDataSource.load("SampleData/geojson/polygon_bldg_buff.geojson");
 var promise3 = Cesium.GeoJsonDataSource.load("SampleData/geojson/polygon_bldg_buff.geojson");
 var promise4 = Cesium.GeoJsonDataSource.load("SampleData/geojson/polygon_bldg_buff.geojson");
-var pw_polygon = Cesium.GeoJsonDataSource.load(power_json);
+var en_polygon = Cesium.GeoJsonDataSource.load(energy_json);
 var electric_pole = Cesium.IonResource.fromAssetId(167335);
 var fire_hydrant = Cesium.IonResource.fromAssetId(164759);
 var heightdetail = document.getElementById("heightdetail");
 var authodetail = document.getElementById("authodetail");
 var zonedetail = document.getElementById("zonedetail");
-var powerdetail = document.getElementById("powerdetail");
+var energydetail = document.getElementById("energydetail");
 var fire_hydrant = Cesium.IonResource.fromAssetId(164759)
 var electric_pole = Cesium.IonResource.fromAssetId(167335)
 
@@ -170,7 +170,7 @@ $(document).ready(function () {
             heightdetail.style.display = "none";
             authodetail.style.display = "none";
             zonedetail.style.display = "none";
-            powerdetail.style.display = "none";
+            energydetail.style.display = "none";
             promise2.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
@@ -214,7 +214,7 @@ $(document).ready(function () {
             heightdetail.style.display = "block";
             authodetail.style.display = "none";
             zonedetail.style.display = "none";
-            powerdetail.style.display = "none";
+            energydetail.style.display = "none";
             promise1.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
@@ -254,7 +254,7 @@ $(document).ready(function () {
             authodetail.style.display = "block";
             heightdetail.style.display = "none";
             zonedetail.style.display = "none";
-            powerdetail.style.display = "none";
+            energydetail.style.display = "none";
             promise1.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
@@ -294,7 +294,7 @@ $(document).ready(function () {
             zonedetail.style.display = "block";
             heightdetail.style.display = "none";
             authodetail.style.display = "none";
-            powerdetail.style.display = "none";
+            energydetail.style.display = "none";
             promise1.then(function (dataSource) {
                 viewer.dataSources.remove(dataSource);
             });
@@ -309,24 +309,24 @@ $(document).ready(function () {
             });
             viewer.scene.primitives.remove(building);
         }
-        if ($(this).val() == 'power') {
+        if ($(this).val() == 'energy') {
             pw_polygon.then(function (dataSource) {
                 viewer.dataSources.add(dataSource);
                 var entities = dataSource.entities.values;
                 for (var i = 0; i < entities.length; i++) {
                     var entity = entities[i];
                     var height = entity.properties.heigth_m;
-                    var power = entity.properties.power;
-                    if (power <= 0) {
+                    var energy = entity.properties.energy;
+                    if (energy <= 0) {
                         color = Cesium.Color.BLUE;
                     }
-                    else if (power <= 100) {
+                    else if (energy <= 100) {
                         color = Cesium.Color.GREEN;
                     }
-                    else if (power <= 200) {
+                    else if (energy <= 200) {
                         color = Cesium.Color.YELLOW;
                     }
-                    else if (power <= 300) {
+                    else if (energy <= 300) {
                         color = Cesium.Color.ORANGE;
                     }
                     else {
@@ -337,7 +337,7 @@ $(document).ready(function () {
                     entity.polygon.extrudedHeight = height;
                 }
             })
-            powerdetail.style.display = "block";
+            energydetail.style.display = "block";
             zonedetail.style.display = "none";
             heightdetail.style.display = "none";
             authodetail.style.display = "none";
@@ -806,7 +806,7 @@ function barChart() {
 
 // // กำหนดค่าที่จะแสดงผลในแกน x, y ของ bar chart
 // var xValues2 = bld_name;
-// var yValues2 = power_value;
+// var yValues2 = energy_value;
 
 // // map ค่าในแกน x และ y เข้าด้วยกัน
 // let merged2 = xValues2.map((bar, i) => {
