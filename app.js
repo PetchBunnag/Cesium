@@ -237,13 +237,13 @@ $(document).ready(function () {
                     var height = entity.properties.heigth_m;
                     var autho = entity.properties.autho;
                     if (autho == 'PMCU') {
-                        color = Cesium.Color.fromCssColorString('#d01c8b');
+                        color = Cesium.Color.fromCssColorString('#ff8cd9');
                     }
                     else if (autho == 'PRM') {
-                        color = Cesium.Color.fromCssColorString('#4dac26');
+                        color = Cesium.Color.fromCssColorString('#67e6d1');
                     }
                     else {
-                        color = Cesium.Color.fromCssColorString('#f7f7f7');
+                        color = Cesium.Color.fromCssColorString('#e65154');
                     }
                     entity.polygon.material = color;
                     entity.polygon.outline = false;
