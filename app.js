@@ -812,72 +812,13 @@ function barChart() {
     }
 }
 
-// // กำหนดค่าที่จะแสดงผลในแกน x, y ของ bar chart
-// var xValues2 = bld_name;
-// var yValues2 = energy_value;
-
-// // map ค่าในแกน x และ y เข้าด้วยกัน
-// let merged2 = xValues2.map((bar, i) => {
-//     return {
-//         "datapoint": yValues2[i],
-//         "label": xValues2[i]
-//     }
-// })
-
-// // จัดเรียง bar chart จากค่ามากไปน้อย
-// const dataSort2 = merged2.sort(function (b, a) {
-//     return a.datapoint - b.datapoint
-// });
-
-// const dp2 = [];
-// const lab2 = [];
-// for (i = 0; i < dataSort2.length; i++) {
-//     dp2.push(dataSort2[i].datapoint);
-//     lab2.push(dataSort2[i].label);
-// }
-
-// // กำหนดตัวแปรที่ใช้ในการแสดงผล bar chart
-// const barchartData2 = {
-//     labels: lab2,
-//     datasets: [{
-//         backgroundColor: barColors,
-//         data: dp2,
-//         footerFontColor: '#fff'
-//     }]
-// };
-
-// const barchartconfig2 = {
-//     type: "bar",
-//     data: barchartData2,
-//     options: {
-//         maintainAspectRatio: false,
-//         legend: { display: false },
-//         title: {
-//             display: true,
-//             text: 'ข้อมูลการใช้พลังงานเฉลี่ยรายอาคาร'
-//         }
-//     }
-// }
-
-// // แสดง bar chart ของการใช้พลังงาน
-// function barChart2() {
-//     var checkBox = document.getElementById("bar2");
-//     var barChart = document.getElementById("barchart2");
-//     if (checkBox.checked == true) {
-//         barChart.style.display = "block";
-//         new Chart("myBarChart2", barchartconfig2);
-//     } else {
-//         barChart.style.display = "none";
-//     }
-// }
-
 // แสดง pie chart การ classify ความสูงของอาคาร
 function pieChart() {
     var checkBox = document.getElementById("pie");
     var pieChart = document.getElementById("piechart");
     if (checkBox.checked == true) {
         pieChart.style.display = "block";
-        var xValues = ["0 - 20 เมตร", "21 - 40 เมตร", "41 - 60 เมตร", "61 - 80 เมตร", "มากกว่า 80 เมตร"];
+        var xValues = ["1 - 20 เมตร", "21 - 40 เมตร", "41 - 60 เมตร", "61 - 80 เมตร", "มากกว่า 80 เมตร"];
         var yValues = [2252, 103, 32, 14, 8];
         var barColors = [
             "#5813fc",
