@@ -316,29 +316,30 @@ $(document).ready(function () {
                     var entity = entities[i];
                     var height = entity.properties.heigth_m;
                     var energy = entity.properties.energy;
+                    const colors = ["#d53e4f", "#f46d43", "#fdae61", "#fee08b", "#e6f598", "#abdda4", "#66c2a5", "#3288bd"];
                     if (energy < 0) {
-                        color = Cesium.Color.fromCssColorString('#2b83ba');
+                        color = Cesium.Color.fromCssColorString('#3288bd');
                     }
                     else if (energy <= 250) {
-                        color = Cesium.Color.fromCssColorString('#74b6ad');
+                        color = Cesium.Color.fromCssColorString('#66c2a5');
                     }
                     else if (energy <= 500) {
-                        color = Cesium.Color.fromCssColorString('#b7e2a8');
+                        color = Cesium.Color.fromCssColorString('#abdda4');
                     }
                     else if (energy <= 750) {
-                        color = Cesium.Color.fromCssColorString('#e7f5b7');
+                        color = Cesium.Color.fromCssColorString('#e6f598');
                     }
                     else if (energy <= 1000) {
-                        color = Cesium.Color.fromCssColorString('#fee8a4');
+                        color = Cesium.Color.fromCssColorString('#fee08b');
                     }
                     else if (energy <= 1250) {
-                        color = Cesium.Color.fromCssColorString('#fdba6e');
+                        color = Cesium.Color.fromCssColorString('#fdae61');
                     }
                     else if (energy <= 1500) {
-                        color = Cesium.Color.fromCssColorString('#ed6e43');
+                        color = Cesium.Color.fromCssColorString('#f46d43');
                     }
                     else {
-                        color = Cesium.Color.fromCssColorString('#d7191c');
+                        color = Cesium.Color.fromCssColorString('#d53e4f');
                     }
                     entity.polygon.material = color;
                     entity.polygon.outline = false;
