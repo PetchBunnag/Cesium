@@ -880,11 +880,11 @@ function pieChart() {
         var xValues = ["0 - 20 เมตร", "21 - 40 เมตร", "41 - 60 เมตร", "61 - 80 เมตร", "มากกว่า 80 เมตร"];
         var yValues = [2252, 103, 32, 14, 8];
         var barColors = [
-            "blue",
-            "green",
-            "yellow",
-            "orange",
-            "red"
+            "#5813fc",
+            "#1cc2fd",
+            "#7dfd94",
+            "#f5c926",
+            "#ff2b18"
         ];
 
         var piechartData = {
@@ -922,9 +922,9 @@ function pieChart2() {
         var xValues = ["PMCU", "PRM", "อื่นๆ"];
         var yValues = [2104, 218, 87];
         var barColors = [
-            "gold",
-            "hotpink",
-            "greenyellow"
+            "#ff8cd9",
+            "#67e6d1",
+            "#e65154"
         ];
 
         var piechartData = {
@@ -962,9 +962,9 @@ function pieChart3() {
         var xValues = ["พื้นที่การศึกษา", "พื้นที่พาณิชยกรรม", "พื้นที่ให้ส่วนราชการเช่าใช้"];
         var yValues = [251, 2094, 64];
         var barColors = [
-            "skyblue",
-            "mediumpurple",
-            "tomato"
+            "#e60049",
+            "#0bb4ff",
+            "#50e991"
         ];
 
         var piechartData = {
