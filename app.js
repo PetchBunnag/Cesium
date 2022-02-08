@@ -191,19 +191,19 @@ $(document).ready(function () {
                     var entity = entities[i];
                     var height = entity.properties.heigth_m;
                     if (height <= 20) {
-                        color = Cesium.Color.fromCssColorString('#1a9641');
+                        color = Cesium.Color.fromCssColorString('#5813fc');
                     }
                     else if (height <= 40) {
-                        color = Cesium.Color.fromCssColorString('#a6d96a');
+                        color = Cesium.Color.fromCssColorString('#1cc2fd');
                     }
                     else if (height <= 60) {
-                        color = Cesium.Color.fromCssColorString('#ffffc0');
+                        color = Cesium.Color.fromCssColorString('#7dfd94');
                     }
                     else if (height <= 80) {
-                        color = Cesium.Color.fromCssColorString('#fdae61');
+                        color = Cesium.Color.fromCssColorString('#f5c926');
                     }
                     else {
-                        color = Cesium.Color.fromCssColorString('#d7191c');
+                        color = Cesium.Color.fromCssColorString('#ff2b18');
                     }
                     entity.polygon.material = color;
                     entity.polygon.outline = false;
@@ -316,7 +316,6 @@ $(document).ready(function () {
                     var entity = entities[i];
                     var height = entity.properties.heigth_m;
                     var energy = entity.properties.energy;
-                    const colors = ["#d53e4f", "#f46d43", "#fdae61", "#fee08b", "#e6f598", "#abdda4", "#66c2a5", "#3288bd"];
                     if (energy < 0) {
                         color = Cesium.Color.fromCssColorString('#3288bd');
                     }
