@@ -191,19 +191,19 @@ $(document).ready(function () {
                     var entity = entities[i];
                     var height = entity.properties.heigth_m;
                     if (height <= 20) {
-                        color = Cesium.Color.BLUE;
+                        color = Cesium.Color.fromCssColorString('#2b83ba');
                     }
                     else if (height <= 40) {
-                        color = Cesium.Color.GREEN;
+                        color = Cesium.Color.fromCssColorString('#abdda4');
                     }
                     else if (height <= 60) {
-                        color = Cesium.Color.YELLOW;
+                        color = Cesium.Color.fromCssColorString('#ffffbf');
                     }
                     else if (height <= 80) {
-                        color = Cesium.Color.ORANGE;
+                        color = Cesium.Color.fromCssColorString('#fdae61');
                     }
                     else {
-                        color = Cesium.Color.RED;
+                        color = Cesium.Color.fromCssColorString('#d7191c');
                     }
                     entity.polygon.material = color;
                     entity.polygon.outline = false;
@@ -237,13 +237,13 @@ $(document).ready(function () {
                     var height = entity.properties.heigth_m;
                     var autho = entity.properties.autho;
                     if (autho == 'PMCU') {
-                        color = Cesium.Color.GOLD;
+                        color = Cesium.Color.fromCssColorString('#d01c8b');
                     }
                     else if (autho == 'PRM') {
-                        color = Cesium.Color.HOTPINK;
+                        color = Cesium.Color.fromCssColorString('#4dac26');
                     }
                     else {
-                        color = Cesium.Color.GREENYELLOW;
+                        color = Cesium.Color.fromCssColorString('#f7f7f7');
                     }
                     entity.polygon.material = color;
                     entity.polygon.outline = false;
@@ -277,13 +277,13 @@ $(document).ready(function () {
                     var height = entity.properties.heigth_m;
                     var permit_area = entity.properties.permit_area;
                     if (permit_area == 'สถานศึกษา') {
-                        color = Cesium.Color.SKYBLUE;
+                        color = Cesium.Color.fromCssColorString('#e66101');
                     }
                     else if (permit_area == 'พาณิชย์') {
-                        color = Cesium.Color.MEDIUMPURPLE;
+                        color = Cesium.Color.fromCssColorString('#5e3c99');
                     }
                     else {
-                        color = Cesium.Color.TOMATO;
+                        color = Cesium.Color.fromCssColorString('#f7f7f7');
                     }
                     entity.polygon.material = color;
                     entity.polygon.outline = false;
@@ -316,20 +316,29 @@ $(document).ready(function () {
                     var entity = entities[i];
                     var height = entity.properties.heigth_m;
                     var energy = entity.properties.energy;
-                    if (energy <= 0) {
-                        color = Cesium.Color.BLUE;
+                    if (energy < 0) {
+                        color = Cesium.Color.fromCssColorString('#2b83ba');
                     }
-                    else if (energy <= 100) {
-                        color = Cesium.Color.GREEN;
+                    else if (energy <= 250) {
+                        color = Cesium.Color.fromCssColorString('#74b6ad');
                     }
-                    else if (energy <= 200) {
-                        color = Cesium.Color.YELLOW;
+                    else if (energy <= 500) {
+                        color = Cesium.Color.fromCssColorString('#b7e2a8');
                     }
-                    else if (energy <= 300) {
-                        color = Cesium.Color.ORANGE;
+                    else if (energy <= 750) {
+                        color = Cesium.Color.fromCssColorString('#e7f5b7');
+                    }
+                    else if (energy <= 1000) {
+                        color = Cesium.Color.fromCssColorString('#fee8a4');
+                    }
+                    else if (energy <= 1250) {
+                        color = Cesium.Color.fromCssColorString('#fdba6e');
+                    }
+                    else if (energy <= 1500) {
+                        color = Cesium.Color.fromCssColorString('#ed6e43');
                     }
                     else {
-                        color = Cesium.Color.RED;
+                        color = Cesium.Color.fromCssColorString('#d7191c');
                     }
                     entity.polygon.material = color;
                     entity.polygon.outline = false;
