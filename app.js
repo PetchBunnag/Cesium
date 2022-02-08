@@ -191,13 +191,13 @@ $(document).ready(function () {
                     var entity = entities[i];
                     var height = entity.properties.heigth_m;
                     if (height <= 20) {
-                        color = Cesium.Color.fromCssColorString('#2b83ba');
+                        color = Cesium.Color.fromCssColorString('#1a9641');
                     }
                     else if (height <= 40) {
-                        color = Cesium.Color.fromCssColorString('#abdda4');
+                        color = Cesium.Color.fromCssColorString('#a6d96a');
                     }
                     else if (height <= 60) {
-                        color = Cesium.Color.fromCssColorString('#ffffbf');
+                        color = Cesium.Color.fromCssColorString('#ffffc0');
                     }
                     else if (height <= 80) {
                         color = Cesium.Color.fromCssColorString('#fdae61');
