@@ -942,7 +942,7 @@ function pieChart4() {
         pieChart.style.display = "block";
         var xValues = ["น้อยกว่า 0 จูล", "0 - 250 จูล", "251 - 500 จูล", "501 - 750 จูล", "751 - 1000 จูล", "1001 - 1250 จูล", "1251 - 1500 จูล", "มากกว่า 1500 จูล"];
         var yValues = [
-            energy_order.filter(x => x < 2).length,
+            energy_order.filter(x => x < 0).length,
             energy_order.filter(x => x <= 250).length,
             energy_order.filter(x => x <= 500).length,
             energy_order.filter(x => x <= 750).length,
