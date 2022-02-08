@@ -55,9 +55,6 @@ for (var i = 4; i < 248; i++) {
     }
 }
 
-// console.log(bld);
-// console.log(energy_value);
-
 let order = [
     159, 144, 147, 154, 151, 98, 66, 160, 87, 43, 67, 149, 148, 145, 150, 122, 45, 31, 153, 155, 158, 152, 18, 110, 19, 111, 118, 63, 97,
     59, 113, 114, 117, 95, 136, 81, 44, 166, 65, 139, 55, 143, 161, 162, 49, 164, 100, 50, 58, 146, 91, 132, 141, 140, 129, 101, 130, 131,
@@ -72,9 +69,6 @@ var energy_order = [];
 order.forEach(i => name_order.push(bld[i]));
 order.forEach(i => energy_order.push(energy_value[i]));
 
-console.log(name_order);
-console.log(energy_order);
-
 var building_list = [];
 var energy_list = []
 var energy_json = JSON.parse(Get('SampleData/geojson/polygon_bldg_energy.geojson'));
@@ -83,10 +77,6 @@ for (var i = 0; i < energy_json.features.length; i++) {
     energy_json.features[i].properties.energy += energy_order[i];
     energy_list.push(energy_json.features[i].properties.energy)
 }
-
-console.log(building_list);
-console.log(energy_list);
-console.log(energy_json);
 
 var promise1 = Cesium.GeoJsonDataSource.load("SampleData/geojson/polygon_bldg_buff.geojson");
 var promise2 = Cesium.GeoJsonDataSource.load("SampleData/geojson/polygon_bldg_buff.geojson");
