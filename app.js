@@ -25,7 +25,14 @@ scene.camera.setView({
     endTransform: Cesium.Matrix4.IDENTITY,
 });
 
-let bld = [];
+function Get(yourUrl) {
+    var Httpreq = new XMLHttpRequest(); // a new request
+    Httpreq.open("GET", yourUrl, false);
+    Httpreq.send(null);
+    return Httpreq.responseText;
+}
+
+// let bld = [];
 let energy_value = [];
 for (var i = 4; i < 248; i++) {
     if (
@@ -48,14 +55,14 @@ for (var i = 4; i < 248; i++) {
     ) {
         var url = 'http://94.74.116.125:9000/api/v1/node/' + i + '/usage_profile/day/energy';
         var json_obj = JSON.parse(Get(url));
-        let name = `${json_obj.data['name']}`
+        // let name = `${json_obj.data['name']}`
         let energy = `${json_obj.data['energy']}`
-        bld.push(name);
+        // bld.push(name);
         energy_value.push(parseFloat(energy));
     }
 }
 
-let order = [
+let en_order = [
     159, 144, 147, 154, 151, 98, 66, 160, 87, 43, 67, 149, 148, 145, 150, 122, 45, 31, 153, 155, 158, 152, 18, 110, 19, 111, 118, 63, 97,
     59, 113, 114, 117, 95, 136, 81, 44, 166, 65, 139, 55, 143, 161, 162, 49, 164, 100, 50, 58, 146, 91, 132, 141, 140, 129, 101, 130, 131,
     102, 137, 39, 90, 28, 99, 78, 103, 96, 0, 21, 105, 104, 1, 30, 82, 127, 79, 106, 73, 20, 5, 138, 46, 47, 53, 125, 16, 60, 29, 34, 32,
@@ -64,18 +71,18 @@ let order = [
     25, 134, 165, 163, 68, 51, 75, 135, 156, 128, 93, 84, 24
 ];
 
-var name_order = [];
+// var name_order = [];
 var energy_order = [];
-order.forEach(i => name_order.push(bld[i]));
-order.forEach(i => energy_order.push(energy_value[i]));
+// en_order.forEach(i => name_order.push(bld[i]));
+en_order.forEach(i => energy_order.push(energy_value[i]));
 
-var building_list = [];
-var energy_list = []
+// var building_list = [];
+// var energy_list = []
 var energy_json = JSON.parse(Get('SampleData/geojson/polygon_bldg_energy.geojson'));
 for (var i = 0; i < energy_json.features.length; i++) {
-    building_list.push(energy_json.features[i].properties.bld_name);
+    // building_list.push(energy_json.features[i].properties.bld_name);
     energy_json.features[i].properties.energy += energy_order[i];
-    energy_list.push(energy_json.features[i].properties.energy)
+    // energy_list.push(energy_json.features[i].properties.energy)
 }
 
 var promise1 = Cesium.GeoJsonDataSource.load("SampleData/geojson/polygon_bldg_buff.geojson");
@@ -388,7 +395,7 @@ billboards.add({
     eyeOffset: new Cesium.Cartesian3(0, 0, -45),
 });
 
-cu_muvmi = Cesium.GeoJsonDataSource.load("SampleData/geojson/cu_muvmi_point_sta.geojson");
+var cu_muvmi = Cesium.GeoJsonDataSource.load("SampleData/geojson/cu_muvmi_point_sta.geojson");
 
 // แสดงจุดบริการ MuvMi
 function MuvMi() {
@@ -410,7 +417,7 @@ function MuvMi() {
     }
 }
 
-cu_cctv = Cesium.GeoJsonDataSource.load("SampleData/geojson/cu_cctv.geojson");
+var cu_cctv = Cesium.GeoJsonDataSource.load("SampleData/geojson/cu_cctv.geojson");
 
 // แสดงตำแหน่งกล้องวงจรปิด
 function CCTV() {
@@ -432,8 +439,7 @@ function CCTV() {
     }
 }
 
-bus_point_sta = Cesium.GeoJsonDataSource.load("SampleData/geojson/bus_point_sta.geojson");
-
+var bus_point_sta = Cesium.GeoJsonDataSource.load("SampleData/geojson/bus_point_sta.geojson");
 var bus_line;
 
 // แสดงจุดจอดรถโดยสารและเส้นเดินรถ CU shuttle bus
@@ -470,13 +476,6 @@ function shbus() {
         viewer.imageryLayers.remove(bus_line);
         shbusdetail.style.display = "none";
     }
-}
-
-function Get(yourUrl) {
-    var Httpreq = new XMLHttpRequest(); // a new request
-    Httpreq.open("GET", yourUrl, false);
-    Httpreq.send(null);
-    return Httpreq.responseText;
 }
 
 var json_obj = JSON.parse(Get('http://159.138.252.132:9000/api/v1/pm_sensor/data'));
@@ -539,12 +538,21 @@ var avgcolor = function () {
 }
 avgcolor();
 
-pm = Cesium.GeoJsonDataSource.load("SampleData/geojson/pm_data.geojson");
+let pm_order = [
+    3, 4, 22, 17, 14, 24, 19, 15, 6, 29, 12, 8, 1, 21, 13, 0, 2, 5, 27, 25, 28, 32, 7, 23, 48,
+    20, 31, 10, 11, 9, 36, 16, 18, 30, 26, 34, 37, 38, 39, 40, 41, 42, 35, 43, 44, 45, 46, 49, 47, 33
+]
+
+// var sensor_order = [];
+var value_order = [];
+// pm_order.forEach(i => sensor_order.push(sensor_name[i]));
+pm_order.forEach(i => value_order.push(pm_value[i]));
+
 let bounds = {
     west: 100.5232007,
     east: 100.5364466,
     south: 13.7329829,
-    north: 13.74339258,
+    north: 13.74409429,
 };
 
 // init heatmap
@@ -557,39 +565,26 @@ let heatMap = CesiumHeatmap.create(
     }
 );
 
+const x = [];
+const y = [];
+
 var pm_geojson = JSON.parse(Get('SampleData/geojson/pm_data.geojson'));
-const x = new Array();
-const y = new Array();
 for (var i = 0; i < pm_geojson.features.length; i++) {
     x.push(pm_geojson.features[i].properties.x)
     y.push(pm_geojson.features[i].properties.y)
+    pm_geojson.features[i].properties.pm += value_order[i]
 }
 
 let data = [];
-for (var i = 0; i < pm_value.length; i++) {
-    var data_value = { x: x[i], y: y[i], value: pm_value[i] };
+for (var i = 0; i < value_order.length; i++) {
+    var data_value = { x: x[i], y: y[i], value: value_order[i] };
     data.push(data_value);
 }
 
 let valueMin = Math.min.apply(Math, notnull_value);
 let valueMax = Math.max.apply(Math, notnull_value);
 
-// นำเข้า logo pin pm 2.5 แต่ละสี และกำหนดตัวแปรที่จะแสดงผลที่แต่ละจุด
-const location_gray = 'assets/svg/location-gray.svg'
-const location_blue = 'assets/svg/location-blue.svg'
-const location_green = 'assets/svg/location-green.svg'
-const location_yellow = 'assets/svg/location-yellow.svg'
-const location_orange = 'assets/svg/location-orange.svg'
-const location_red = 'assets/svg/location-red.svg'
-const textName = ""
-const font = "400 16px CHULALONGKORN"
-const backgroundColor = Cesium.Color.TRANSPARENT
-const showBackground = true
-const fillColor = Cesium.Color.BLACK
-const outlineColor = Cesium.Color.WHITE
-const outlineWidth = 2
-const style = Cesium.LabelStyle.FILL_AND_OUTLINE
-const pixelOffset = new Cesium.Cartesian2(0, -35)
+var pm = Cesium.GeoJsonDataSource.load(pm_geojson);
 
 // แสดง heatmap ของ pm 2.5
 function PM() {
@@ -601,133 +596,69 @@ function PM() {
             var entities = dataSource.entities.values;
             for (var i = 0; i < entities.length; i++) {
                 var entity = entities[i];
-                entity.billboard = billboards.get(3);
-                for (j in pm_value) {
-                    if (isNaN(pm_value[j])) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_gray,
-                                scale: 0.4,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: "N/A",
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
+                var value = entity.properties.pm;
+                entity.label = {
+                    fillColor: Cesium.Color.BLACK,
+                    outlineColor: Cesium.Color.WHITE,
+                    outlineWidth: 6,
+                    font: "400 16px CHULALONGKORN",
+                    pixelOffset: new Cesium.Cartesian2(0, -35),
+                    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                    text: "" + Math.round(value),
+                    showBackground: true,
+                    backgroundColor: Cesium.Color.TRANSPARENT,
+                }
+                if (isNaN(value)) {
+                    entity.billboard = {
+                        image: 'assets/svg/location-gray.svg',
+                        scale: 0.4,
+                        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                     }
-                    else if (pm_value[j] <= 25) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_blue,
-                                scale: 0.4,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + Math.round(pm_value[j]),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
+                    entity.label = {
+                        fillColor: Cesium.Color.BLACK,
+                        outlineColor: Cesium.Color.WHITE,
+                        outlineWidth: 8,
+                        font: "400 16px CHULALONGKORN",
+                        pixelOffset: new Cesium.Cartesian2(0, -35),
+                        style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                        text: "N/A",
+                        showBackground: true,
+                        backgroundColor: Cesium.Color.TRANSPARENT,
                     }
-                    else if (pm_value[j] <= 50) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_green,
-                                scale: 0.4,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + Math.round(pm_value[j]),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
+                }
+                else if (value <= 25) {
+                    entity.billboard = {
+                        image: 'assets/svg/location-blue.svg',
+                        scale: 0.4,
+                        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                     }
-                    else if (pm_value[j] <= 100) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_yellow,
-                                scale: 0.4,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + Math.round(pm_value[j]),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
+                }
+                else if (value <= 50) {
+                    entity.billboard = {
+                        image: 'assets/svg/location-green.svg',
+                        scale: 0.4,
+                        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                     }
-                    else if (pm_value[j] <= 200) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_orange,
-                                scale: 0.4,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + Math.round(pm_value[j]),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
+                }
+                else if (value <= 100) {
+                    entity.billboard = {
+                        image: 'assets/svg/location-yellow.svg',
+                        scale: 0.4,
+                        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                     }
-                    else if (pm_value[j] > 200) {
-                        viewer.entities.add({
-                            position: Cesium.Cartesian3.fromDegrees(x[j], y[j]),
-                            billboard: {
-                                image: location_red,
-                                scale: 0.4,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                            },
-                            label: {
-                                text: textName + Math.round(pm_value[j]),
-                                font,
-                                backgroundColor,
-                                showBackground,
-                                fillColor,
-                                outlineColor,
-                                outlineWidth,
-                                style,
-                                pixelOffset,
-                            },
-                        });
+                }
+                else if (value <= 200) {
+                    entity.billboard = {
+                        image: 'assets/svg/location-orange.svg',
+                        scale: 0.4,
+                        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                    }
+                }
+                else if (value > 200) {
+                    entity.billboard = {
+                        image: 'assets/svg/location-red.svg',
+                        scale: 0.4,
+                        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                     }
                 }
             }
@@ -736,8 +667,7 @@ function PM() {
     else {
         pm.then(function (dataSource) {
             viewer.dataSources.remove(dataSource);
-            viewer.entities.removeAll();
-            // heatMap.removeLayer();
+            heatMap.removeLayer();
         })
     }
 }
