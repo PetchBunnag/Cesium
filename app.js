@@ -439,10 +439,9 @@ function CCTV() {
     }
 }
 
+// แสดงจุดจอดรถโดยสารและเส้นเดินรถ CU shuttle bus
 var bus_point_sta = Cesium.GeoJsonDataSource.load("SampleData/geojson/bus_point_sta.geojson");
 var bus_line;
-
-// แสดงจุดจอดรถโดยสารและเส้นเดินรถ CU shuttle bus
 function shbus() {
     var checkBox = document.getElementById("shbus");
     var shbusdetail = document.getElementById("shbusdetail");
@@ -475,6 +474,118 @@ function shbus() {
         });
         viewer.imageryLayers.remove(bus_line);
         shbusdetail.style.display = "none";
+    }
+}
+
+var road_line;
+function road() {
+    var checkBox = document.getElementById("road");
+    var roaddetail = document.getElementById("roaddetail");
+    if (checkBox.checked == true) {
+        var imageryLayers = viewer.imageryLayers;
+        road_line = imageryLayers.addImageryProvider(
+            new Cesium.WebMapServiceImageryProvider({
+                url:
+                    "https://infraplus-dev.org/geoserver/prmdb_2020/wms",
+                layers: "road_line",
+                parameters: {
+                    transparent: true,
+                    format: "image/png",
+                },
+            })
+        );
+        roaddetail.style.display = "block";
+    }
+    else {
+        viewer.imageryLayers.remove(road_line);
+        roaddetail.style.display = "none";
+    }
+}
+
+var drain_pipe_line;
+function pipe() {
+    var checkBox = document.getElementById("pipe");
+    var pipedetail = document.getElementById("pipedetail");
+    if (checkBox.checked == true) {
+        var imageryLayers = viewer.imageryLayers;
+        drain_pipe_line = imageryLayers.addImageryProvider(
+            new Cesium.WebMapServiceImageryProvider({
+                url:
+                    "https://infraplus-dev.org/geoserver/prmdb_2020/wms",
+                layers: "drain_pipe_line",
+                parameters: {
+                    transparent: true,
+                    format: "image/png",
+                },
+            })
+        );
+        pipedetail.style.display = "block";
+    }
+    else {
+        viewer.imageryLayers.remove(drain_pipe_line);
+        pipedetail.style.display = "none";
+    }
+}
+
+var gutter_line;
+function gutter() {
+    var checkBox = document.getElementById("gutter");
+    var gutterdetail = document.getElementById("gutterdetail");
+    if (checkBox.checked == true) {
+        var imageryLayers = viewer.imageryLayers;
+        gutter_line = imageryLayers.addImageryProvider(
+            new Cesium.WebMapServiceImageryProvider({
+                url:
+                    "https://infraplus-dev.org/geoserver/prmdb_2020/wms",
+                layers: "gutter_line",
+                parameters: {
+                    transparent: true,
+                    format: "image/png",
+                },
+            })
+        );
+        gutterdetail.style.display = "block";
+    }
+    else {
+        viewer.imageryLayers.remove(gutter_line);
+        gutterdetail.style.display = "none";
+    }
+}
+
+var sidewalk_area = Cesium.GeoJsonDataSource.load('SampleData/geojson/sidewalk_area.geojson')
+function sidewalk() {
+    var checkBox = document.getElementById("sidewalk");
+    if (checkBox.checked == true) {
+        sidewalk_area.then(function (dataSource) {
+            viewer.dataSources.add(dataSource);
+            var entities = dataSource.entities.values;
+            for (var i = 0; i < entities.length; i++) {
+                var entity = entities[i];
+                color = Cesium.Color.GREY;
+                entity.polygon.material = color;
+                entity.polygon.outline = false;
+                entity.polygon.extrudedHeight = 0.2;
+            }
+        })
+    }
+    else {
+        sidewalk_area.then(function (dataSource) {
+            viewer.dataSources.remove(dataSource);
+        });
+    }
+}
+
+function tree() {
+    var checkBox = document.getElementById("tree");
+    if (checkBox.checked == true) {
+        tree_model = viewer.scene.primitives.add(
+            new Cesium.Cesium3DTileset({
+                url: Cesium.IonResource.fromAssetId(476068)
+            })
+        );
+    }
+    else {
+        viewer.scene.remove(tree_model);
     }
 }
 
