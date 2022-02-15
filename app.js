@@ -3,6 +3,7 @@ Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOi
 var viewer = new Cesium.Viewer('cesiumContainer', {
     timeline: false, // ปิดการแสดงผล timeline ด้านล่าง
     animation: false,
+    shadows: true,
 });
 
 // ปิดการแสดงผล logo Cesium
@@ -395,7 +396,8 @@ billboards.add({
     eyeOffset: new Cesium.Cartesian3(0, 0, -45),
 });
 
-var cu_muvmi = Cesium.GeoJsonDataSource.load("SampleData/geojson/cu_muvmi_point_sta.geojson");
+// var cu_muvmi = Cesium.GeoJsonDataSource.load("SampleData/geojson/cu_muvmi_point_sta.geojson");
+var cu_muvmi = Cesium.GeoJsonDataSource.load("https://infraplus-dev.org/geoserver/prmdb_2020/wms?service=WMS&version=1.1.0&request=GetMap&layers=prmdb_2020%3Acu_muvmi_point_sta&bbox=100.521583557129%2C13.7299499511719%2C100.537933349609%2C13.7467241287231&width=748&height=768&srs=EPSG%3A4326&styles=&format=geojson");
 
 // แสดงจุดบริการ MuvMi
 function MuvMi() {
@@ -585,7 +587,7 @@ function tree() {
         );
     }
     else {
-        viewer.scene.remove(tree_model);
+        viewer.scene.primitives.remove(tree_model);
     }
 }
 
